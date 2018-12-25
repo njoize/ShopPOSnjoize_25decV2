@@ -1,7 +1,9 @@
 package njoize.dai_ka.com.demotestprint;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -78,11 +79,13 @@ public class FoodFragment extends Fragment {
             ArrayList<String> nameFoodStringArrayList = new ArrayList<>();
             ArrayList<String> amounStringArrayList = new ArrayList<>();
             ArrayList<String> priceSumStringArrayList = new ArrayList<>();
+            final ArrayList<String> idSQLiteStringArrayList = new ArrayList<>();
 
             for (int i = 0; i < cursor.getCount(); i += 1) {
 
                 nameFoodStringArrayList.add(cursor.getString(2));
                 amounStringArrayList.add(cursor.getString(4));
+                idSQLiteStringArrayList.add(cursor.getString(0));
 
                 int priceInt = Integer.parseInt(cursor.getString(3));
                 int amountInt = Integer.parseInt(amounStringArrayList.get(i));
@@ -105,7 +108,7 @@ public class FoodFragment extends Fragment {
                     priceSumStringArrayList, new OnClickItem() {
                 @Override
                 public void onClickItem(View view, int positions) {
-
+                    increaseOrDecrease(idSQLiteStringArrayList.get(positions));
                 }
             });
 
@@ -116,6 +119,34 @@ public class FoodFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void increaseOrDecrease(final String idSQLite) {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("Increase or Decrease").setMessage("Please Click Button").setPositiveButton("Increase", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                toolIncDec(idSQLite, true);
+            }
+        }).setNegativeButton("Decrease", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                toolIncDec(idSQLite, false);
+            }
+        }).show();
+
+    }
+
+    private void toolIncDec(String idSQLite, boolean status) {
+
+        SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE WHERE id = " + "'" + idSQLite + "'", null);
+        cursor.moveToFirst();
+
+        String amountString = cursor.getString(4);
+        Log.d("25decV4", "Current Amount ==> " + amountString);
+
+        int amountInt = Integer.parseInt(String);
+
     }
 
     private void foodRecyclerView(String idCategoryString) {
