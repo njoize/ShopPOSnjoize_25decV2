@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -66,6 +67,13 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 
 //      Draw Desk
         drawDesk();
+
+//        Test Show
+        TextView textView = getView().findViewById(R.id.txtTest);
+        String stringTest = "Test1" + "\n" + "Test2" + "\n" + "123";
+        textView.setText(stringTest);
+
+
 
 //        buildDesk(textViews[6][1],3, "3 CT", "12:00", "5");
 

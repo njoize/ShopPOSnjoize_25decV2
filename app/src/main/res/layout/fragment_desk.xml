@@ -18,6 +18,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--Test Text-->
+            <TextView
+                android:id="@+id/txtTest"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="Test"
+                android:background="#444"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+
+
             <!--Row0-->
             <LinearLayout
                 android:layout_width="match_parent"
