@@ -51,11 +51,9 @@ public class AuthenFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences(myConstant.getSharePreferFile(), Context.MODE_PRIVATE);
         boolean b = sharedPreferences.getBoolean("Remember", false);
-        String jsonString = sharedPreferences.getString("JSON", "");
 
-        if (b && (jsonString.length() != 0)) {
+        if (b) {
             Intent intent = new Intent(getActivity(), ServiceActivity.class);
-            intent.putExtra("Login", jsonString);
             startActivity(intent);
             getActivity().finish();
         }

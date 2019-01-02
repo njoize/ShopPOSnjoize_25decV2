@@ -113,9 +113,7 @@ public class ServiceActivity extends AppCompatActivity {
                 MyConstant myConstant = new MyConstant();
                 SharedPreferences sharedPreferences = getSharedPreferences(myConstant.getSharePreferFile(), MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("User", "");
-                editor.putBoolean("Remember", false);
-                editor.putString("JSON", "");
+                editor.clear();
                 editor.commit();
 
                 startActivity(new Intent(ServiceActivity.this, MainActivity.class));
@@ -234,18 +232,8 @@ public class ServiceActivity extends AppCompatActivity {
     }
 
     private void getValueLogin() {
-        loginJSONString = getIntent().getStringExtra("Login");
-        Log.d(tag, "JSON receive ==> " + loginJSONString);
-
-        try {
-
-            JSONArray jsonArray = new JSONArray(loginJSONString);
-            JSONObject jsonObject = jsonArray.getJSONObject(0);
-            nameString = jsonObject.getString("name");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SharedPreferences sharedPreferences = getSharedPreferences("userLogin", MODE_PRIVATE);
+        nameString = sharedPreferences.getString("User", "");
     }
 
     private void createToolbar() {
