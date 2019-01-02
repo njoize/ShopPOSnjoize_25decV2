@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 public class FoodFragment extends Fragment {
 
     //    Explicit
-    private String amountCustomerString;
+    private String amountCustomerString, tidString, tnameString;
     private boolean totalBillABoolean;
     private String idCategoryClick;
     private MyManageSQLite myManageSQLite;
@@ -39,11 +40,16 @@ public class FoodFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static FoodFragment foodInstante(String amountCustomer, boolean totalBill) {
+    public static FoodFragment foodInstante(String amountCustomer,
+                                            boolean totalBill,
+                                            String tidString,
+                                            String tnameString) {
 
         FoodFragment foodFragment = new FoodFragment();
         Bundle bundle = new Bundle();
         bundle.putString("Amount", amountCustomer);
+        bundle.putString("Tid", tidString);
+        bundle.putString("Tname", tnameString);
         bundle.putBoolean("Bill", totalBill);
         foodFragment.setArguments(bundle);
         return foodFragment;
@@ -65,13 +71,26 @@ public class FoodFragment extends Fragment {
 //        Check Order
         checkOrder();
 
-//        Cancle Controller
-        cancleController();
+//        Cancel Controller
+        cancelController();
 
+//        Order Controller
+        orderController();
 
     }   // Main Method
 
-    private void cancleController() {
+    private void orderController() {
+        Button button = getView().findViewById(R.id.btnOrder);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+    }
+
+    private void cancelController() {
         Button button = getView().findViewById(R.id.btnCancle);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +98,12 @@ public class FoodFragment extends Fragment {
 
                 try {
 
-                    SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE,null);
-                    sqLiteDatabase.delete(MyOpenHelper.database_table,null,null);
+                    SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
+                    sqLiteDatabase.delete(MyOpenHelper.database_table, null, null);
                     checkOrder();
 
                 } catch (Exception e) {
-                    Log.d("2janV1", "e cancle ==> " + e.toString());
+                    Log.d("2janV1", "e cancel ==> " + e.toString());
                 }
 
             }
@@ -106,6 +125,8 @@ public class FoodFragment extends Fragment {
             ArrayList<String> priceSumStringArrayList = new ArrayList<>();
             final ArrayList<String> idSQLiteStringArrayList = new ArrayList<>();
 
+            int totalAInt = 0;
+
             for (int i = 0; i < cursor.getCount(); i += 1) {
 
                 nameFoodStringArrayList.add(cursor.getString(2));
@@ -116,6 +137,8 @@ public class FoodFragment extends Fragment {
                 int amountInt = Integer.parseInt(amounStringArrayList.get(i));
 
                 priceSumStringArrayList.add(Integer.toString(priceInt * amountInt));
+
+                totalAInt = totalAInt + (priceInt * amountInt);
 
                 cursor.moveToNext();
             }   // for
@@ -139,6 +162,9 @@ public class FoodFragment extends Fragment {
 
             recyclerView.setAdapter(orderAdapter);
 
+//            Show AmountPrice
+            TextView textView = getView().findViewById(R.id.txtTotal);
+            textView.setText("Total: " + Integer.toString(totalAInt) + " THB");
 
 
         } catch (Exception e) {
@@ -146,25 +172,28 @@ public class FoodFragment extends Fragment {
         }
     }
 
-    private void increaseOrDecrease(final String idSQLite) {
+    private void increaseOrDecrease(final String idSQLit) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Increase or Decrease").setMessage("Please Click Button").setPositiveButton("Increase", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setTitle("Increase or Decrease")
+                .setMessage("Please Click Button")
+                .setPositiveButton("Increase", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        toolIncDec(idSQLit, true);
+                    }
+                }).setNegativeButton("Decrease", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                toolIncDec(idSQLite, true);
-            }
-        }).setNegativeButton("Decrease", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                toolIncDec(idSQLite, false);
+                toolIncDec(idSQLit, false);
             }
         }).show();
+
 
     }
 
     private void toolIncDec(String idSQLite, boolean status) {
 
         SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE WHERE id = " + "'" + idSQLite + "'", null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTABLE WHERE id=" + "'" + idSQLite + "'", null);
         cursor.moveToFirst();
 
         String amountString = cursor.getString(4);
@@ -190,7 +219,6 @@ public class FoodFragment extends Fragment {
             }
 
         }
-
 
 
     }
@@ -252,7 +280,6 @@ public class FoodFragment extends Fragment {
 
                     checkOrder();
 
-
                 }
             });
 
@@ -300,7 +327,6 @@ public class FoodFragment extends Fragment {
                 }
 
                 cursor.moveToNext();
-
             }
             cursor.close();
 
@@ -360,9 +386,51 @@ public class FoodFragment extends Fragment {
 
     private void receiveValue() {
         amountCustomerString = getArguments().getString("Amount");
+        tidString = getArguments().getString("Tid");
+        tnameString = getArguments().getString("Tname");
         totalBillABoolean = getArguments().getBoolean("Bill");
-        Log.d("24decV3", "amount ==> " + amountCustomerString);
-        Log.d("24decV3", "Bill ==> " + totalBillABoolean);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("OrderFood", Context.MODE_PRIVATE);
+        amountCustomerString = sharedPreferences.getString("Amount", "");
+        tidString = sharedPreferences.getString("Tid", "");
+        tnameString = sharedPreferences.getString("Tname", "");
+        totalBillABoolean = sharedPreferences.getBoolean("Total", true);
+
+
+        Log.d("2janV1", "amount รับ Food ==> " + amountCustomerString);
+        Log.d("2janV1", "Tid รับ Food ==> " + tidString);
+        Log.d("2janV1", "Tname รับ Food ==> " + tnameString);
+        Log.d("2janV1", "Bill รับ  Food ==> " + totalBillABoolean);
+
+//        Show Desk
+        TextView deskTextView = getView().findViewById(R.id.txtDesk);
+        deskTextView.setText("Table: " + tnameString);
+
+//        Show Zone
+        TextView zoneTextView = getView().findViewById(R.id.txtZone);
+        zoneTextView.setText("Zone : x");
+
+//        Show Amount User
+        TextView amountTextView = getView().findViewById(R.id.txtAmountUser);
+        amountTextView.setText("Customer: " + amountCustomerString);
+
+//        Show Total Bill
+        TextView totalTextView = getView().findViewById(R.id.txtTotalBill);
+        totalTextView.setText("Bill: " + findTotalText(totalBillABoolean));
+
+
+
+
+    }
+
+    private String findTotalText(boolean totalBillABoolean) {
+
+        String result = "แยกบิล";
+        if (totalBillABoolean) {
+            result = "รวมบิล";
+        }
+
+        return result;
     }
 
     @Override

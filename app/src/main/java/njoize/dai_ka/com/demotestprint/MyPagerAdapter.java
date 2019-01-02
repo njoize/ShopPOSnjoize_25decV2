@@ -26,13 +26,13 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
                 DeskFragment deskFragment = new DeskFragment();
                 return deskFragment;
             case 2:
-                FoodFragment foodFragment = FoodFragment.foodInstante("", true);
+                FoodFragment foodFragment = FoodFragment.foodInstante("", true,"","");
                 return foodFragment;
             case 3:
                 NotificationFragment notificationFragment = new NotificationFragment();
                 return notificationFragment;
-                default:
-                    return null;
+            default:
+                return null;
         }
 
     }

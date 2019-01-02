@@ -13,14 +13,57 @@
         android:layout_weight="1">
 
         <!--Head Title-->
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/layoutHead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#cfcfcf"
+            android:orientation="vertical"
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
 
+            <!--Status-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!--Desk-->
+                <TextView
+                    android:id="@+id/txtDesk"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="text" />
+
+                <!--Zone-->
+                <TextView
+                    android:id="@+id/txtZone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="text" />
+
+                <!--AmountUser-->
+                <TextView
+                    android:id="@+id/txtAmountUser"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="text" />
+
+                <!--Total Bill-->
+                <TextView
+                    android:id="@+id/txtTotalBill"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="text" />
+
+            </LinearLayout>
+
+
+            <!--Title Column-->
             <LinearLayout
 
                 android:layout_width="match_parent"
@@ -58,7 +101,7 @@
 
             </LinearLayout>
 
-        </FrameLayout>
+        </LinearLayout>
 
         <!--Content-->
         <android.support.v7.widget.RecyclerView
@@ -83,6 +126,7 @@
 
                 <!--Show Total-->
                 <TextView
+                    android:layout_marginRight="16dp"
                     android:id="@+id/txtTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

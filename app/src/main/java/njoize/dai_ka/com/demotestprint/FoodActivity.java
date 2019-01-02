@@ -13,12 +13,12 @@ public class FoodActivity extends AppCompatActivity {
         String amountCustomer = getIntent().getStringExtra("Amount");
         boolean totalBill = getIntent().getBooleanExtra("Bill", true);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.contentFoodFragment, FoodFragment.foodInstante(amountCustomer, totalBill))
-                    .commit();
-        }
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.contentFoodFragment, FoodFragment.foodInstante(amountCustomer, totalBill))
+//                    .commit();
+//        }
 
     }
 }

@@ -4,7 +4,6 @@ package njoize.dai_ka.com.demotestprint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -51,6 +50,8 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
     private ArrayList<String> idNameStringArrayList = new ArrayList<>();
     private ArrayList<String> tnameStringArrayList = new ArrayList<>();
 
+    private int position;
+
 
     public DeskFragment() {
         // Required empty public constructor
@@ -70,9 +71,9 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 
     } // Main Method
 
-    private void buildDesk(TextView textView, int deskFactor, String cnum, String time, String desk){
+    private void buildDesk(TextView textView, int deskFactor, String cnum, String time, String desk) {
         // the following change is what fixed it
-        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
 
         int factor = 12 * deskFactor;
         int factor2 = 2;
@@ -132,14 +133,14 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
                 idNameStringArrayList.add("/imv" + Integer.toString(indexStartPre) + "_" + Integer.toString(indexStartSub) + "}");
 
                 buildDesk(textViews[indexStartPre][indexStartSub], deskFactor, "5 CT",
-                       "12:30", tname);
+                        "12:30", tname);
 
                 textViews[indexStartPre][indexStartSub].setOnClickListener(this);
 
             } // for
 
-            Log.d("24decV1", "tidStringArrayList ==> " + tidStringArrayList.toString());
-            Log.d("24decV1", "idNameStringArrayList ==> " + idNameStringArrayList.toString());
+            Log.d("2janV1", "tidStringArrayList ==> " + tidStringArrayList.toString());
+            Log.d("2janV1", "idNameStringArrayList ==> " + idNameStringArrayList.toString());
 
 
         } catch (Exception e) {
@@ -226,9 +227,9 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
         Log.d("24decV1", "result ==> " + result);
 
         String tidClick = "";
-        int position = 0;
+        position = 0;
 
-        for (int i=0; i < idNameStringArrayList.size(); i += 1) {
+        for (int i = 0; i < idNameStringArrayList.size(); i += 1) {
             if (result.equals(idNameStringArrayList.get(i))) {
                 position = i;
             }
@@ -247,40 +248,49 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
         alertDialogBuilder.setTitle("For Desk " + tnameStringArrayList.get(position))
                 .setMessage("Please Fill All Blank")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which) {
 
-                EditText editText = view.findViewById(R.id.edtAmountCustomer);
-                String amountCustomerString = editText.getText().toString().trim();
-                if (amountCustomerString.isEmpty()) {
-                    Toast.makeText(getActivity(), "Please Fill Amount Customer", Toast.LENGTH_SHORT).show();
-                } else {
-                    boolean totalBill = true;
-                    RadioButton radioButton = view.findViewById(R.id.radBill);
-                    if (radioButton.isChecked()) {
-                        totalBill = true;
-                    } else {
-                        totalBill = false;
+                        EditText editText = view.findViewById(R.id.edtAmountCustomer);
+                        String amountCustomerString = editText.getText().toString().trim();
+                        if (amountCustomerString.isEmpty()) {
+                            Toast.makeText(getActivity(), "Please Fill Amount Customer", Toast.LENGTH_SHORT).show();
+                        } else {
+                            boolean totalBill = true;
+                            RadioButton radioButton = view.findViewById(R.id.radBill);
+                            if (radioButton.isChecked()) {
+                                totalBill = true;
+                            } else {
+                                totalBill = false;
+                            }
+
+                            String tidString = tidStringArrayList.get(position);
+                            String tnameString = tnameStringArrayList.get(position);
+
+
+                            Log.d("2janV1", "Amunt ส่ง==> " + amountCustomerString);
+                            Log.d("2janV1", "totalBill ส่ง==> " + totalBill);
+                            Log.d("2janV1", "tidString ส่ง==> " + tidString);
+                            Log.d("2janV1", "tnameString ส่ง==> " + tnameString);
+
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.contentServiceFragment, ServiceFragment.serviceInstant(2,
+                                            amountCustomerString,
+                                            totalBill,
+                                            tidString,
+                                            tnameString))
+                                    .commit();
+
+
+                        }
+
+                        dialog.dismiss();
                     }
-
-                    Log.d("24decV2", "Amunt ==> " + amountCustomerString);
-                    Log.d("24decV2", "totalBill ==> " + totalBill);
-
-                    Intent intent = new Intent(getActivity(), FoodActivity.class);
-                    intent.putExtra("Amount", amountCustomerString);
-                    intent.putExtra("Bill", totalBill);
-                    startActivity(intent);
-
-
-                }
-
-                dialog.dismiss();
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
-
 
 
     }   // onClick

@@ -1,11 +1,14 @@
 package njoize.dai_ka.com.demotestprint;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,26 @@ public class ServiceFragment extends Fragment {
     private ViewPager viewPager;
     private MyConstant myConstant = new MyConstant();
 
+    private int postionAnInt = 1;
+    private String amountString, tidString, tnameString;
+    private boolean totalABoolean;
+
+    public static ServiceFragment serviceInstant(int positionInt,
+                                                 String amountString,
+                                                 boolean totalBool,
+                                                 String tidString,
+                                                 String tnameString) {
+        ServiceFragment serviceFragment = new ServiceFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("Position", positionInt);
+        bundle.putString("Amount", amountString);
+        bundle.putString("Tid", tidString);
+        bundle.putString("Tname", tnameString);
+        bundle.putBoolean("Total", totalBool);
+        serviceFragment.setArguments(bundle);
+        return serviceFragment;
+    }
+
 
     public ServiceFragment() {
         // Required empty public constructor
@@ -30,6 +53,8 @@ public class ServiceFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getValue();
+
 //        Create TabLayout
         createTabLayout();
 
@@ -37,9 +62,30 @@ public class ServiceFragment extends Fragment {
         createViewPager();
 
 
-
-
     } // Main Medthod
+
+    private void getValue() {
+        postionAnInt = getArguments().getInt("Position", 1);
+        amountString = getArguments().getString("Amount", "");
+        tidString = getArguments().getString("Tid", "");
+        tnameString = getArguments().getString("Tname", "");
+        totalABoolean = getArguments().getBoolean("Total", true);
+
+        Log.d("2janV1", "Amount รับ " + amountString);
+        Log.d("2janV1", "Tid รับ " + tidString);
+        Log.d("2janV1", "Tname รับ " + tnameString);
+        Log.d("2janV1", "Total รับ " + totalABoolean);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("OrderFood", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Amount", amountString);
+        editor.putString("Tid", tidString);
+        editor.putString("Tname", tnameString);
+        editor.putBoolean("Total", totalABoolean);
+        editor.commit();
+
+
+    }
 
     private void createViewPager() {
         viewPager = getView().findViewById(R.id.viewPager);
@@ -48,7 +94,7 @@ public class ServiceFragment extends Fragment {
         viewPager.setAdapter(myPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(postionAnInt);
 
     }
 
@@ -56,7 +102,7 @@ public class ServiceFragment extends Fragment {
         tabLayout = getView().findViewById(R.id.tabLayout);
         String[] strings = myConstant.getTitleTabStrings();
         int[] iconInts = myConstant.getIconBillTitleInts();
-        for (int i=0; i<strings.length; i+=1) {
+        for (int i = 0; i < strings.length; i += 1) {
             tabLayout.addTab(tabLayout.newTab().setText(strings[i]).setIcon(iconInts[i]));
         }
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
