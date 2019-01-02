@@ -35,6 +35,7 @@ public class FoodFragment extends Fragment {
     private boolean totalBillABoolean;
     private String idCategoryClick;
     private MyManageSQLite myManageSQLite;
+    private int valueCatAnInt;
 
     public FoodFragment() {
         // Required empty public constructor
@@ -77,13 +78,35 @@ public class FoodFragment extends Fragment {
 //        Order Controller
         orderController();
 
+//        Payment Controller
+        paymentController();
+
+
     }   // Main Method
+
+    private void paymentController() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userLogin", Context.MODE_PRIVATE);
+        String catString = sharedPreferences.getString("Cat", "0");
+        valueCatAnInt = Integer.parseInt(catString);
+
+        MyConstant myConstant = new MyConstant();
+        int[] allowPaymentInts = myConstant.getAllowPayment();
+
+        for (int i = 0; i < allowPaymentInts.length; i += 1) {
+            if (valueCatAnInt == allowPaymentInts[i]) {
+                Button button = getView().findViewById(R.id.btnPayment);
+                button.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     private void orderController() {
         Button button = getView().findViewById(R.id.btnOrder);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String tag = "2janV3";
 
 
             }
@@ -395,6 +418,9 @@ public class FoodFragment extends Fragment {
         tidString = sharedPreferences.getString("Tid", "");
         tnameString = sharedPreferences.getString("Tname", "");
         totalBillABoolean = sharedPreferences.getBoolean("Total", true);
+
+
+
 
 
         Log.d("2janV1", "amount รับ Food ==> " + amountCustomerString);

@@ -3,6 +3,7 @@ package njoize.dai_ka.com.demotestprint;
 public class MyConstant {
 
     //    Explicit
+    private int[] allowPayment = new int[]{1,3,4,6};
     private String urlGetFoodWhereIdAndUser = "http://www.brainwakecafe.com/android/getAllProduct.php";
 
     private int[] iconDrawerInts = new int[]{R.drawable.ic_action_one, R.drawable.ic_action_one, R.drawable.ic_action_exit};
@@ -55,6 +56,10 @@ public class MyConstant {
 
 //    Getter
 
+
+    public int[] getAllowPayment() {
+        return allowPayment;
+    }
 
     public String getUrlGetFoodWhereIdAndUser() {
         return urlGetFoodWhereIdAndUser;

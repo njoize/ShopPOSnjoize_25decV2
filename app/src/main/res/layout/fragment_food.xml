@@ -156,6 +156,7 @@
                         android:text="Order" />
 
                     <Button
+                        android:visibility="gone"
                         android:id="@+id/btnPayment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

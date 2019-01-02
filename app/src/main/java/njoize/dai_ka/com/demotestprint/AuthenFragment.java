@@ -103,6 +103,8 @@ public class AuthenFragment extends Fragment {
                             String truePassword = convertMD5toString(jsonObject.getString("pass"));
                             Log.d("25novV1", "truePassword ==> " + truePassword);
 
+                            String catString = jsonObject.getString("cat");
+
                             if (checkPassword(passwordString, jsonObject.getString("pass"))) {
 
                                 CheckBox checkBox = getView().findViewById(R.id.chbRememberMe);
@@ -113,7 +115,7 @@ public class AuthenFragment extends Fragment {
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("User", userString);
                                 editor.putBoolean("Remember", checkBox.isChecked());
-                                editor.putString("JSON", resultJSoN);
+                                editor.putString("Cat", catString);
 
                                 editor.commit();
 
