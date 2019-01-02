@@ -8,6 +8,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
 
     private Context context;
     public static final String database_name = "shop.db";
+    public static final String database_table = "orderTABLE";
     private static final int database_version = 1;
     private static final String sql_command = "CREATE TABLE orderTABLE (" +
             "id INTEGER PRIMARY KEY, " +

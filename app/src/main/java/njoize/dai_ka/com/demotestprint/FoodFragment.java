@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,7 +65,31 @@ public class FoodFragment extends Fragment {
 //        Check Order
         checkOrder();
 
+//        Cancle Controller
+        cancleController();
+
+
     }   // Main Method
+
+    private void cancleController() {
+        Button button = getView().findViewById(R.id.btnCancle);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+
+                    SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE,null);
+                    sqLiteDatabase.delete(MyOpenHelper.database_table,null,null);
+                    checkOrder();
+
+                } catch (Exception e) {
+                    Log.d("2janV1", "e cancle ==> " + e.toString());
+                }
+
+            }
+        });
+    }
 
     private void checkOrder() {
 
