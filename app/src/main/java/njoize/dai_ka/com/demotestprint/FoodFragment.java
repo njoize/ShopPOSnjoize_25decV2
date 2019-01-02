@@ -145,7 +145,28 @@ public class FoodFragment extends Fragment {
         String amountString = cursor.getString(4);
         Log.d("25decV4", "Current Amount ==> " + amountString);
 
-        int amountInt = Integer.parseInt(String);
+        int amountInt = Integer.parseInt(amountString);
+        cursor.close();
+
+        if (status) {
+//            Increase Status
+            amountInt += 1;
+            sqLiteDatabase.execSQL("UPDATE orderTABLE SET Amount=" + "'" + Integer.toString(amountInt) + "'" + " WHERE id=" + "'" + idSQLite + "'");
+            checkOrder();
+        } else {
+//            Decrease Status
+            if (amountInt == 1) {
+                sqLiteDatabase.delete("orderTABLE", "id" + "=" + idSQLite, null);
+                checkOrder();
+            } else {
+                amountInt -= 1;
+                sqLiteDatabase.execSQL("UPDATE orderTABLE SET Amount=" + "'" + Integer.toString(amountInt) + "'" + " WHERE id=" + "'" + idSQLite + "'");
+                checkOrder();
+            }
+
+        }
+
+
 
     }
 
