@@ -81,19 +81,25 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 
     private void buildDesk(TextView textView, int deskFactor, String cnum, String time, String desk) {
         // the following change is what fixed it
-        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
 
-        int factor = 12 * deskFactor;
-        int factor2 = 2;
+        ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
+        layoutParams.width = deskFactor * 50;
+        layoutParams.height = deskFactor * 100;
+        textView.setLayoutParams(layoutParams);
+
+
+//        int factor = 12 * deskFactor;
+//        int factor2 = 2;
 
         textView.setBackgroundColor(Color.RED);
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(getResources().getColor(android.R.color.white));
 //        paramsExample.setMargins(factor2, factor2, factor2, factor2);
-        textView.setPadding(factor, factor, factor, factor);
+//        textView.setPadding(factor, factor, factor, factor);
         textView.setTextSize(10);
         textView.setText(cnum + "\n" + time + "\n" + desk);
-        textView.setLayoutParams(paramsExample);
+//        textView.setLayoutParams(paramsExample);
     }
 
     private void drawDesk() {
