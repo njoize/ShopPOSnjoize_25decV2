@@ -19,6 +19,8 @@ public class DetailActivity extends AppCompatActivity {
             valueStrings1[i] = getIntent().getStringExtra(strings[i]);
         }
 
+        String tidString = getIntent().getStringExtra("tid");
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -30,7 +32,7 @@ public class DetailActivity extends AppCompatActivity {
                             valueStrings1[3],
                             valueStrings1[4],
                             valueStrings1[5],
-                            valueStrings1[6])).commit();
+                            valueStrings1[6],tidString)).commit();
         }
 
 

@@ -110,6 +110,8 @@ public class BillFragment extends Fragment {
 
         ArrayList<String> bgColorStringArrayList = new ArrayList<>();
 
+        final ArrayList<String> tidStringArrayList = new ArrayList<>();
+
         try {
 
             ReadAllDataThread readAllDataThread = new ReadAllDataThread(getActivity());
@@ -142,6 +144,9 @@ public class BillFragment extends Fragment {
 
                 bgColorStringArrayList.add(Integer.toString(tabPosition));
 
+                // อย่าลืมแก้เป็น tid ดึง database
+                tidStringArrayList.add(jsonObject.getString("tname"));
+
             } // for
 
             BillRecyclerViewAdapter billRecyclerViewAdapter = new BillRecyclerViewAdapter(getActivity(),
@@ -162,6 +167,8 @@ public class BillFragment extends Fragment {
                     intent.putExtra(strings[4], nameStringArrayList.get(positions));
                     intent.putExtra(strings[5], zoneStringArrayList.get(positions));
                     intent.putExtra(strings[6], deskStringArrayList.get(positions));
+
+                    intent.putExtra("tid", tidStringArrayList.get(positions));
 
                     startActivity(intent);
                     

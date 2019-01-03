@@ -1,6 +1,8 @@
 package njoize.dai_ka.com.demotestprint;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +46,7 @@ public class BillDetailFragment extends Fragment {
 
 
     private String idBillString, timeString, cnumString, typeString, nameString, zoneString, deskString;
+    private String tidString;
     private String tag = "2decV2";
     private MyConstant myConstant = new MyConstant();
 
@@ -57,7 +61,7 @@ public class BillDetailFragment extends Fragment {
                                                         String typeString,
                                                         String nameString,
                                                         String zoneString,
-                                                        String deskString) {
+                                                        String deskString, String tidString) {
 
         BillDetailFragment billDetailFragment = new BillDetailFragment();
         Bundle bundle = new Bundle();
@@ -68,6 +72,7 @@ public class BillDetailFragment extends Fragment {
         bundle.putString("name", nameString);
         bundle.putString("Zone", zoneString);
         bundle.putString("Desk", deskString);
+        bundle.putString("tid",tidString);
         billDetailFragment.setArguments(bundle);
         return billDetailFragment;
     }
@@ -199,6 +204,7 @@ public class BillDetailFragment extends Fragment {
         nameString = getArguments().getString("name");
         zoneString = getArguments().getString("Zone");
         deskString = getArguments().getString("Desk");
+        tidString = getArguments().getString("tid");
         Log.d(tag, "idBill ==> " + idBillString);
     }
 
@@ -226,121 +232,157 @@ public class BillDetailFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
 
-                            if (communicationABoolean) {
-
-                                anInt += 1;
-
-                                String printSring = "Print";
-                                String line2String = "OK";
-                                printSring = printSring + " " + Integer.toString(anInt);
-                                Log.d("12decV1", "You Click Payment: " + printSring);
+//
 
 
-                                byte[] top = new byte[]{0x10, 0x04, 0x04}; // Space Front Bill
-                                //byte[] bytes  = new byte[]{0x1B, 0x4A, 40}; // Space Front Bill n*0.125 mm
-                                byte[] lineup = new byte[]{0x0A, 0x0D}; // Update Line
-                                byte[] centered = new byte[]{0x1B, 0x61, 1}; // centered
-                                byte[] left = new byte[]{0x1B, 0x61, 0}; // left
-                                byte[] right = new byte[]{0x1B, 0x61, 2}; // right
-                                byte[] tab = new byte[]{27, 101, 0, 9}; // tab
-                                byte[] tab1 = new byte[]{27, 101, 48, 1}; // tab
-                                byte[] tab2 = new byte[]{27, 101, 48, 2}; // tab
-                                byte[] tab3 = new byte[]{27, 101, 48, 3}; // tab
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                            alertDialogBuilder.setTitle("Choose Payment");
+
+                            LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+                            final View view = layoutInflater.inflate(R.layout.alertdialog_payment, null);
+                            alertDialogBuilder.setView(view);
+
+                            alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    CheckBox cashCheckBox = view.findViewById(R.id.chbCash);
+                                    CheckBox creditCheckBox = view.findViewById(R.id.chbCredit);
+                                    CheckBox couponCheckBox = view.findViewById(R.id.chbCoupon);
+
+                                    EditText cashEditText = view.findViewById(R.id.edtMoneyCash);
+                                    String moneyCashString = cashEditText.getText().toString().trim();
+
+                                    EditText creditEditText = view.findViewById(R.id.edtCredit);
+                                    String moneyCreditString = creditEditText.getText().toString().trim();
+
+                                    EditText couponEditText = view.findViewById(R.id.edtCoupon);
+                                    String moneyCouponString = couponEditText.getText().toString().trim();
+
+                                    uploadToServer(cashCheckBox.isChecked(), creditCheckBox.isChecked(), couponCheckBox.isChecked(),
+                                            moneyCashString, moneyCreditString, moneyCouponString);
+
+
+                                    if (communicationABoolean) {
+
+                                        anInt += 1;
+
+                                        String printSring = "Print";
+                                        String line2String = "OK";
+                                        printSring = printSring + " " + Integer.toString(anInt);
+                                        Log.d("12decV1", "You Click Payment: " + printSring);
+
+
+                                        byte[] top = new byte[]{0x10, 0x04, 0x04}; // Space Front Bill
+                                        //byte[] bytes  = new byte[]{0x1B, 0x4A, 40}; // Space Front Bill n*0.125 mm
+                                        byte[] lineup = new byte[]{0x0A, 0x0D}; // Update Line
+                                        byte[] centered = new byte[]{0x1B, 0x61, 1}; // centered
+                                        byte[] left = new byte[]{0x1B, 0x61, 0}; // left
+                                        byte[] right = new byte[]{0x1B, 0x61, 2}; // right
+                                        byte[] tab = new byte[]{27, 101, 0, 9}; // tab
+                                        byte[] tab1 = new byte[]{27, 101, 48, 1}; // tab
+                                        byte[] tab2 = new byte[]{27, 101, 48, 2}; // tab
+                                        byte[] tab3 = new byte[]{27, 101, 48, 3}; // tab
 //                                byte[] tab0    = new byte[]{27,68, 9}; // tab
-                                byte[] tab0 = new byte[]{9}; // tab
-                                byte[] dfont = new byte[]{0x1B, 0x21, 0x00}; // default font
-                                byte[] bold = new byte[3]; // Set the font (double height and width bold)
-                                bold[0] = 0x1B;
-                                bold[1] = 0x21;
-                                bold[2] |= 0x04; // 08 04 bold
-                                bold[2] |= 0x08; // 10 08 height
-                                bold[2] |= 0x20; // 20 10
-                                byte[] openCashDrawer = new byte[]{0x1B, 0x70, 0x00, 0x40, 0x50}; // Open Cash Drawer
-                                byte[] cutterPaper = new byte[]{0x1D, 0x56, 0x42, 90}; // Cutter Paper command
+                                        byte[] tab0 = new byte[]{9}; // tab
+                                        byte[] dfont = new byte[]{0x1B, 0x21, 0x00}; // default font
+                                        byte[] bold = new byte[3]; // Set the font (double height and width bold)
+                                        bold[0] = 0x1B;
+                                        bold[1] = 0x21;
+                                        bold[2] |= 0x04; // 08 04 bold
+                                        bold[2] |= 0x08; // 10 08 height
+                                        bold[2] |= 0x20; // 20 10
+                                        byte[] openCashDrawer = new byte[]{0x1B, 0x70, 0x00, 0x40, 0x50}; // Open Cash Drawer
+                                        byte[] cutterPaper = new byte[]{0x1D, 0x56, 0x42, 90}; // Cutter Paper command
 
 
-                                byte[] OVERLINE = new byte[]{0x1B, 0x2D, 0x01};
-                                byte[] UNDERLINE = new byte[]{0x1B, 0x2D, 0x01};
-                                byte[] ROW_SPACE = new byte[]{0x1B, 0x31, 0x06}; //
-                                byte[] ROW_DEFAULT = new byte[]{0x1B, 0x32}; //
-                                byte[] ROW = new byte[]{0x1B, 0x33, 0x00}; //
-                                byte[] INIT = new byte[]{0x1B, 0x40};
-                                byte[] CLEAN = new byte[]{0x18};
-                                byte[] LF = new byte[]{0x0A};
-                                byte[] CR = new byte[]{0x0D};
-                                byte[] DLE_EOT_1 = new byte[]{0x10, 0x04, 0x01};
-                                byte[] DLE_EOT_2 = new byte[]{0x10, 0x04, 0x02};
-                                byte[] DLE_EOT_3 = new byte[]{0x10, 0x04, 0x03};
-                                byte[] DLE_EOT_4 = new byte[]{0x10, 0x04, 0x04}; //top
-                                byte[] DOUBLE_WIDTH = new byte[]{0x1B, 0x0E};
-                                byte[] CANCEL_DOUBLE_WIDTH = new byte[]{0x1B, 0x14};
-                                byte[] BOLD = new byte[]{0x1B, 0x45, 0x01};
-                                byte[] CANCEL_BOLD = new byte[]{0x1B, 0x45, 0x00};
-                                byte[] MOVE_POINT = new byte[]{0x1B, 0x4A, 0x00}; //ติดบรรทัดบน
-                                byte[] FONT = new byte[]{0x1B, 0x4D, 0x00};
-                                byte[] RINGHTMARGIN = new byte[]{0x1B, 0x51, 0x05};
-                                byte[] TRANSVERSE = new byte[]{0x1B, 0x55, 0x03};
-                                byte[] LONGITUDINAL = new byte[]{0x1B, 0x56, 0x01}; //แนวนอน
-                                byte[] ALIGN_LEFT = new byte[]{0x1B, 0x61, 0x00}; //left
-                                byte[] ALIGN_CENTER = new byte[]{0x1B, 0x61, 0x01}; //centered
-                                byte[] ALIGN_RIGHT = new byte[]{0x1B, 0x61, 0x02}; //right
-                                byte[] DIRECTION = new byte[]{0x1B, 0x63, 0x00}; //กลับไปจัดซ้าย
-                                byte[] MOVE_LINE = new byte[]{0x1B, 0x64, 0x08}; //เว้น8บรรทัด
-                                byte[] BLANK_LINE = new byte[]{0x1B, 0x66, 0x00, 0x02}; //
-                                byte[] ROTATION = new byte[]{0x1B, 0x49, 0x00};
+                                        byte[] OVERLINE = new byte[]{0x1B, 0x2D, 0x01};
+                                        byte[] UNDERLINE = new byte[]{0x1B, 0x2D, 0x01};
+                                        byte[] ROW_SPACE = new byte[]{0x1B, 0x31, 0x06}; //
+                                        byte[] ROW_DEFAULT = new byte[]{0x1B, 0x32}; //
+                                        byte[] ROW = new byte[]{0x1B, 0x33, 0x00}; //
+                                        byte[] INIT = new byte[]{0x1B, 0x40};
+                                        byte[] CLEAN = new byte[]{0x18};
+                                        byte[] LF = new byte[]{0x0A};
+                                        byte[] CR = new byte[]{0x0D};
+                                        byte[] DLE_EOT_1 = new byte[]{0x10, 0x04, 0x01};
+                                        byte[] DLE_EOT_2 = new byte[]{0x10, 0x04, 0x02};
+                                        byte[] DLE_EOT_3 = new byte[]{0x10, 0x04, 0x03};
+                                        byte[] DLE_EOT_4 = new byte[]{0x10, 0x04, 0x04}; //top
+                                        byte[] DOUBLE_WIDTH = new byte[]{0x1B, 0x0E};
+                                        byte[] CANCEL_DOUBLE_WIDTH = new byte[]{0x1B, 0x14};
+                                        byte[] BOLD = new byte[]{0x1B, 0x45, 0x01};
+                                        byte[] CANCEL_BOLD = new byte[]{0x1B, 0x45, 0x00};
+                                        byte[] MOVE_POINT = new byte[]{0x1B, 0x4A, 0x00}; //ติดบรรทัดบน
+                                        byte[] FONT = new byte[]{0x1B, 0x4D, 0x00};
+                                        byte[] RINGHTMARGIN = new byte[]{0x1B, 0x51, 0x05};
+                                        byte[] TRANSVERSE = new byte[]{0x1B, 0x55, 0x03};
+                                        byte[] LONGITUDINAL = new byte[]{0x1B, 0x56, 0x01}; //แนวนอน
+                                        byte[] ALIGN_LEFT = new byte[]{0x1B, 0x61, 0x00}; //left
+                                        byte[] ALIGN_CENTER = new byte[]{0x1B, 0x61, 0x01}; //centered
+                                        byte[] ALIGN_RIGHT = new byte[]{0x1B, 0x61, 0x02}; //right
+                                        byte[] DIRECTION = new byte[]{0x1B, 0x63, 0x00}; //กลับไปจัดซ้าย
+                                        byte[] MOVE_LINE = new byte[]{0x1B, 0x64, 0x08}; //เว้น8บรรทัด
+                                        byte[] BLANK_LINE = new byte[]{0x1B, 0x66, 0x00, 0x02}; //
+                                        byte[] ROTATION = new byte[]{0x1B, 0x49, 0x00};
 
-                                wifiCommunication.sndByte(openCashDrawer);
+                                        wifiCommunication.sndByte(openCashDrawer);
 
 //                                wifiCommunication.sndByte(top);
-                                wifiCommunication.sndByte(bold);
-                                wifiCommunication.sndByte(centered);
-                                wifiCommunication.sendMsg("Brainwake", "tis-620");
-                                wifiCommunication.sndByte(lineup);
-                                wifiCommunication.sendMsg("Matichon Academy", "tis-620");
-                                wifiCommunication.sndByte(lineup);
-                                wifiCommunication.sendMsg("02 003 4511", "tis-620");
-                                wifiCommunication.sndByte(lineup);
-                                wifiCommunication.sndByte(dfont);
-                                wifiCommunication.sendMsg("-------------------------", "tis-620");
-                                wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(bold);
+                                        wifiCommunication.sndByte(centered);
+                                        wifiCommunication.sendMsg("Brainwake", "tis-620");
+                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sendMsg("Matichon Academy", "tis-620");
+                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sendMsg("02 003 4511", "tis-620");
+                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(dfont);
+                                        wifiCommunication.sendMsg("-------------------------", "tis-620");
+                                        wifiCommunication.sndByte(lineup);
 
 //                                Work Here
 
-                                Log.d("12decV1", "nameArray ==> " + nameStringArrayList.toString());
-                                Log.d("12decV1", "amountArray ==> " + amountStringArrayList.toString());
-                                Log.d("12decV1", "prickArray ==> " + priceStringArrayList.toString());
+                                        Log.d("12decV1", "nameArray ==> " + nameStringArrayList.toString());
+                                        Log.d("12decV1", "amountArray ==> " + amountStringArrayList.toString());
+                                        Log.d("12decV1", "prickArray ==> " + priceStringArrayList.toString());
 
 
+                                        for (int i = 0; i < nameStringArrayList.size(); i += 1) {
 
-                                for (int i = 0; i < nameStringArrayList.size(); i += 1) {
+                                            wifiCommunication.sndByte(left);
+                                            wifiCommunication.sendMsg(Integer.toString(i + 1) + " x ", "tis-620");
+                                            wifiCommunication.sndByte(tab);
 
-                                    wifiCommunication.sndByte(left);
-                                    wifiCommunication.sendMsg(Integer.toString(i + 1) + " x ", "tis-620");
-                                    wifiCommunication.sndByte(tab);
-
-                                    wifiCommunication.sendMsg(shortFood(nameStringArrayList.get(i)), "tis-620");
-                                    wifiCommunication.sndByte(tab);
+                                            wifiCommunication.sendMsg(shortFood(nameStringArrayList.get(i)), "tis-620");
+                                            wifiCommunication.sndByte(tab);
 
 //                                    wifiCommunication.sendMsg("80", "tis-620");
-                                    wifiCommunication.sndByte(tab);
+                                            wifiCommunication.sndByte(tab);
 
 
-                                    wifiCommunication.sendMsg(rightWord(priceStringArrayList.get(i)), "tis-620");
-                                    wifiCommunication.sndByte(lineup);
+                                            wifiCommunication.sendMsg(rightWord(priceStringArrayList.get(i)), "tis-620");
+                                            wifiCommunication.sndByte(lineup);
 
 
-                                }
+                                        }
 
-                                wifiCommunication.sndByte(lineup);
-                                wifiCommunication.sndByte(right);
-                                wifiCommunication.sendMsg(shortTotal(), "tis-620");
-                                wifiCommunication.sndByte(lineup);
-                                wifiCommunication.sndByte(lineup);
-                                wifiCommunication.sndByte(centered);
-                                wifiCommunication.sendMsg("THANK YOU", "tis-620");
-                                wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(right);
+                                        wifiCommunication.sendMsg(shortTotal(), "tis-620");
+                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(centered);
+                                        wifiCommunication.sendMsg("THANK YOU", "tis-620");
+                                        wifiCommunication.sndByte(lineup);
 
-                                wifiCommunication.sndByte(cutterPaper);
+                                        wifiCommunication.sndByte(cutterPaper);
 
 
 //                                wifiCommunication.sndByte(left);
@@ -561,15 +603,23 @@ public class BillDetailFragment extends Fragment {
 //
 
 
-                                wifiCommunication.close();
+                                        wifiCommunication.close();
 
-                                communicationABoolean = false;
+                                        communicationABoolean = false;
 
-                            } else {
 
-                                //Log.d("24novV3", "Communication Disible");
-                                Toast.makeText(getActivity(), "Disable Printer Please Press Click Again", Toast.LENGTH_SHORT).show();
-                            }
+
+                                    } else {
+
+                                        //Log.d("24novV3", "Communication Disible");
+                                        Toast.makeText(getActivity(), "Disable Printer Please Press Click Again", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    dialog.dismiss();
+                                }
+                            });
+                            alertDialogBuilder.show();
+
 
                         } // onClick
                     });
@@ -585,6 +635,91 @@ public class BillDetailFragment extends Fragment {
 
         } // handleMessage
     };
+
+    private void uploadToServer(boolean cashBool,
+                                boolean creditBool,
+                                boolean couponBool,
+                                String moneyCashString,
+                                String moneyCreditString,
+                                String moneyCouponString) {
+
+        String tag = "3janV1";
+        final String statusCash = changeBoolToString(cashBool);
+        String statusCredit = changeBoolToString(creditBool);
+        String statusCoupon = changeBoolToString(couponBool);
+
+        Log.d(tag, "statusCash " + statusCash);
+        Log.d(tag, "Cash = " + moneyCashString);
+        Log.d(tag, "statusCredit " + statusCredit);
+        Log.d(tag, "Credit = " + moneyCreditString);
+        Log.d(tag, "statusCoupon " + statusCoupon);
+        Log.d(tag, "Coupon = " + moneyCouponString);
+
+        Log.d(tag, "SumTotal ==> " + total);
+
+        int payFromCustomer = 0;
+        int payBackCustomer = 0;
+
+        if (couponBool) {
+            payFromCustomer = payFromCustomer + Integer.parseInt(moneyCouponString);
+        }
+
+        if (creditBool) {
+            payFromCustomer = payFromCustomer + Integer.parseInt(moneyCreditString);
+        }
+
+        if (cashBool) {
+            payFromCustomer = payFromCustomer + Integer.parseInt(moneyCashString);
+        }
+
+        Log.d(tag, "PayFromCustomer ==> " + payFromCustomer);
+        payBackCustomer = payFromCustomer - total;
+        Log.d(tag, "Payback ==> " + payBackCustomer);
+
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("PayBack").setMessage("Your PayBack Money = " + Integer.toString(payBackCustomer)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                try {
+
+//                    Upload Data to Server
+                    String oid = idBillString;
+                    String tid = tidString;
+                    String user = nameString;
+                    String payment = statusCash;
+
+                    PaybackThread paybackThread = new PaybackThread(getActivity());
+                    paybackThread.execute(oid, tid, user, payment, myConstant.getUrlPaymentOrder());
+
+                    String result = paybackThread.get();
+
+
+                    getActivity().finish();
+                    dialog.dismiss();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }).show();
+
+
+
+    }
+
+    private String changeBoolToString(boolean statusBool) {
+
+        if (statusBool) {
+            return "1";
+        } else {
+            return "0";
+        }
+
+
+    }
 
     private String shortTotal() {
 

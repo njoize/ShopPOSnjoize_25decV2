@@ -3,6 +3,10 @@ package njoize.dai_ka.com.demotestprint;
 public class MyConstant {
 
     //    Explicit
+    private String urlPaymentOrder = "http://www.brainwakecafe.com/android/editOrder.php";
+
+    private String urlAddOrder = "http://www.brainwakecafe.com/android/addOrder.php";
+
     private int[] allowPayment = new int[]{1,3,4,6};
     private String urlGetFoodWhereIdAndUser = "http://www.brainwakecafe.com/android/getAllProduct.php";
 
@@ -56,6 +60,14 @@ public class MyConstant {
 
 //    Getter
 
+
+    public String getUrlPaymentOrder() {
+        return urlPaymentOrder;
+    }
+
+    public String getUrlAddOrder() {
+        return urlAddOrder;
+    }
 
     public int[] getAllowPayment() {
         return allowPayment;

@@ -106,7 +106,70 @@ public class FoodFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String tag = "2janV3";
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                alertDialogBuilder.setTitle("Confirm Order").setMessage("You want this Order?").setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String tag = "2janV3";
+
+                        MyConstant myConstant = new MyConstant();
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(myConstant.getSharePreferFile(), Context.MODE_PRIVATE);
+
+                        String user = sharedPreferences.getString("User", "");
+                        String numcus = amountCustomerString;
+                        String billtype = "";
+                        if (totalBillABoolean) {
+                            billtype = "2";
+                        } else {
+                            billtype = "1";
+                        }
+                        String tid = tidString;
+                        String pid = "";
+                        String price = "";
+                        String amount = "";
+
+                        Log.d(tag, "user" + user);
+                        Log.d(tag, "numcus" + numcus);
+                        Log.d(tag, "billtype" + billtype);
+                        Log.d(tag, "tid" + tid);
+
+                        SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
+                        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM orderTable", null);
+                        cursor.moveToFirst();
+
+                        for (int i = 0; i < cursor.getCount(); i += 1) {
+
+                            pid = cursor.getString(1);
+                            price = cursor.getString(3);
+                            amount = cursor.getString(4);
+
+                            Log.d(tag, "pid[" + i + "] = " + pid);
+                            Log.d(tag, "price[" + i + "] = " + price);
+                            Log.d(tag, "amount[" + i + "] = " + amount);
+
+//                            Upload to Server
+                            try {
+
+                                OrderThread orderThread = new OrderThread(getActivity());
+                                orderThread.execute(user, numcus, billtype, tid, pid, price, amount, myConstant.getUrlAddOrder());
+
+                                emptySQLite();
+
+                            } catch (Exception e) {
+                                Log.d(tag, "e upload ==> " + e.toString());
+                            }
+
+                            cursor.moveToNext();
+                        }
+
+
+                        dialog.dismiss();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
 
 
             }
@@ -119,18 +182,22 @@ public class FoodFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                try {
-
-                    SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
-                    sqLiteDatabase.delete(MyOpenHelper.database_table, null, null);
-                    checkOrder();
-
-                } catch (Exception e) {
-                    Log.d("2janV1", "e cancel ==> " + e.toString());
-                }
+                emptySQLite();
 
             }
         });
+    }
+
+    private void emptySQLite() {
+        try {
+
+            SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
+            sqLiteDatabase.delete(MyOpenHelper.database_table, null, null);
+            checkOrder();
+
+        } catch (Exception e) {
+            Log.d("2janV1", "e cancel ==> " + e.toString());
+        }
     }
 
     private void checkOrder() {
@@ -420,9 +487,6 @@ public class FoodFragment extends Fragment {
         totalBillABoolean = sharedPreferences.getBoolean("Total", true);
 
 
-
-
-
         Log.d("2janV1", "amount รับ Food ==> " + amountCustomerString);
         Log.d("2janV1", "Tid รับ Food ==> " + tidString);
         Log.d("2janV1", "Tname รับ Food ==> " + tnameString);
@@ -443,8 +507,6 @@ public class FoodFragment extends Fragment {
 //        Show Total Bill
         TextView totalTextView = getView().findViewById(R.id.txtTotalBill);
         totalTextView.setText("Bill: " + findTotalText(totalBillABoolean));
-
-
 
 
     }
