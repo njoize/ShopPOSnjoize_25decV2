@@ -120,6 +120,13 @@ public class ServiceActivity extends AppCompatActivity {
                 finish();
 
                 break;
+            case 3:
+
+//                Test Print
+                startActivity(new Intent(ServiceActivity.this, TestPrintActivity.class));
+
+
+                break;
         }
 
 
