@@ -50,6 +50,7 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
     private ArrayList<String> tidStringArrayList = new ArrayList<>();
     private ArrayList<String> idNameStringArrayList = new ArrayList<>();
     private ArrayList<String> tnameStringArrayList = new ArrayList<>();
+    private ArrayList<String> tznameStringArrayList = new ArrayList<>();
 
     private int position;
 
@@ -69,36 +70,42 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
         drawDesk();
 
 //        Test Show
-        TextView textView = getView().findViewById(R.id.txtTest);
-        String stringTest = "Test1" + "\n" + "Test2" + "\n" + "123";
-        textView.setText(stringTest);
-
+//        TextView textView = getView().findViewById(R.id.txtTest);
+//        String stringTest = "Test1" + "\n" + "Test2" + "\n" + "123";
+//        textView.setText(stringTest);
 
 
 //        buildDesk(textViews[6][1],3, "3 CT", "12:00", "5");
 
     } // Main Method
 
-    private void buildDesk(TextView textView, int deskFactor, String cnum, String time, String desk) {
+    private void buildDesk(TextView textView, int deskFactorStart, int deskFactorEnd, String cnum, String time, String desk , int status) {
         // the following change is what fixed it
 //        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
 
         ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
-        layoutParams.width = deskFactor * 50;
-        layoutParams.height = deskFactor * 100;
+        layoutParams.width = deskFactorEnd * 120;
+        layoutParams.height = deskFactorStart * 120;
         textView.setLayoutParams(layoutParams);
 
 
 //        int factor = 12 * deskFactor;
 //        int factor2 = 2;
 
-        textView.setBackgroundColor(Color.RED);
+        if (status == 0) {
+            textView.setBackgroundColor(Color.LTGRAY);
+        } else if (status == 1) {
+            textView.setBackgroundColor(Color.MAGENTA);
+        } else {
+            textView.setBackgroundColor(Color.RED);
+        }
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(getResources().getColor(android.R.color.white));
 //        paramsExample.setMargins(factor2, factor2, factor2, factor2);
 //        textView.setPadding(factor, factor, factor, factor);
-        textView.setTextSize(10);
-        textView.setText(cnum + "\n" + time + "\n" + desk);
+        textView.setTextSize(20);
+        textView.setText(desk);
+//        textView.setText(cnum + "\n" + time + "\n" + desk);
 //        textView.setLayoutParams(paramsExample);
     }
 
@@ -129,9 +136,13 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
                 String startDesk = jsonObject.getString("tbstart");
                 String endDesk = jsonObject.getString("tbend");
                 String tname = jsonObject.getString("tname");
+                String tzname = jsonObject.getString("tzname");
+                Integer tstatus = jsonObject.getInt("tstatus");
+
 
                 tidStringArrayList.add(jsonObject.getString("tid"));
                 tnameStringArrayList.add(tname);
+                tznameStringArrayList.add(tzname);
 
 
                 Log.d(tag, "startDesk ==> " + startDesk);
@@ -142,12 +153,15 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
                 int indexStartSub = findIndexPreAnSub(startDesk, false);
 
                 int indexEndPre = findIndexPreAnSub(endDesk, true);
-                int deskFactor = indexEndPre - indexStartPre + 1;
+                int indexEndSub = findIndexPreAnSub(endDesk, false);
+
+                int deskFactorStart = indexEndPre - indexStartPre + 1;
+                int deskFactorEnd = indexEndSub - indexStartSub + 1;
 
                 idNameStringArrayList.add("/imv" + Integer.toString(indexStartPre) + "_" + Integer.toString(indexStartSub) + "}");
 
-                buildDesk(textViews[indexStartPre][indexStartSub], deskFactor, "5 CT",
-                        "12:30", tname);
+                buildDesk(textViews[indexStartPre][indexStartSub], deskFactorStart, deskFactorEnd, "5 CT",
+                        "12:30", tname, tstatus);
 
                 textViews[indexStartPre][indexStartSub].setOnClickListener(this);
 
@@ -279,12 +293,14 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 
                             String tidString = tidStringArrayList.get(position);
                             String tnameString = tnameStringArrayList.get(position);
+                            String tznameString = tznameStringArrayList.get(position);
 
 
                             Log.d("2janV1", "Amunt ส่ง==> " + amountCustomerString);
                             Log.d("2janV1", "totalBill ส่ง==> " + totalBill);
                             Log.d("2janV1", "tidString ส่ง==> " + tidString);
                             Log.d("2janV1", "tnameString ส่ง==> " + tnameString);
+                            Log.d("2janV1", "tznameString ส่ง==> " + tznameString);
 
                             getActivity().getSupportFragmentManager()
                                     .beginTransaction()
@@ -292,7 +308,8 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
                                             amountCustomerString,
                                             totalBill,
                                             tidString,
-                                            tnameString))
+                                            tnameString,
+                                            tznameString))
                                     .commit();
 
 

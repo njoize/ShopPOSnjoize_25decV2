@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class FoodFragment extends Fragment {
 
     //    Explicit
-    private String amountCustomerString, tidString, tnameString;
+    private String amountCustomerString, tidString, tnameString, tznameString;
     private boolean totalBillABoolean;
     private String idCategoryClick;
     private MyManageSQLite myManageSQLite;
@@ -254,7 +254,7 @@ public class FoodFragment extends Fragment {
 
 //            Show AmountPrice
             TextView textView = getView().findViewById(R.id.txtTotal);
-            textView.setText("Total: " + Integer.toString(totalAInt) + " THB");
+            textView.setText("รวมทั้งสิ้น : " + Integer.toString(totalAInt) + " บาท");
 
 
         } catch (Exception e) {
@@ -478,18 +478,21 @@ public class FoodFragment extends Fragment {
         amountCustomerString = getArguments().getString("Amount");
         tidString = getArguments().getString("Tid");
         tnameString = getArguments().getString("Tname");
+        tznameString = getArguments().getString("Tzname");
         totalBillABoolean = getArguments().getBoolean("Bill");
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("OrderFood", Context.MODE_PRIVATE);
         amountCustomerString = sharedPreferences.getString("Amount", "");
         tidString = sharedPreferences.getString("Tid", "");
         tnameString = sharedPreferences.getString("Tname", "");
+        tznameString = sharedPreferences.getString("Tzname", "");
         totalBillABoolean = sharedPreferences.getBoolean("Total", true);
 
 
         Log.d("2janV1", "amount รับ Food ==> " + amountCustomerString);
         Log.d("2janV1", "Tid รับ Food ==> " + tidString);
         Log.d("2janV1", "Tname รับ Food ==> " + tnameString);
+        Log.d("2janV1", "Tzname รับ Food ==> " + tznameString);
         Log.d("2janV1", "Bill รับ  Food ==> " + totalBillABoolean);
 
 //        Show Desk
@@ -498,7 +501,7 @@ public class FoodFragment extends Fragment {
 
 //        Show Zone
         TextView zoneTextView = getView().findViewById(R.id.txtZone);
-        zoneTextView.setText("Zone : x");
+        zoneTextView.setText(tznameString);
 
 //        Show Amount User
         TextView amountTextView = getView().findViewById(R.id.txtAmountUser);

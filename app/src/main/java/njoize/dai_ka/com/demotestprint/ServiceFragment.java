@@ -24,20 +24,22 @@ public class ServiceFragment extends Fragment {
     private MyConstant myConstant = new MyConstant();
 
     private int postionAnInt = 1;
-    private String amountString, tidString, tnameString;
+    private String amountString, tidString, tnameString, tznameString;
     private boolean totalABoolean;
 
     public static ServiceFragment serviceInstant(int positionInt,
                                                  String amountString,
                                                  boolean totalBool,
                                                  String tidString,
-                                                 String tnameString) {
+                                                 String tnameString,
+                                                 String tznameString) {
         ServiceFragment serviceFragment = new ServiceFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("Position", positionInt);
         bundle.putString("Amount", amountString);
         bundle.putString("Tid", tidString);
         bundle.putString("Tname", tnameString);
+        bundle.putString("Tzname", tznameString);
         bundle.putBoolean("Total", totalBool);
         serviceFragment.setArguments(bundle);
         return serviceFragment;
@@ -69,11 +71,13 @@ public class ServiceFragment extends Fragment {
         amountString = getArguments().getString("Amount", "");
         tidString = getArguments().getString("Tid", "");
         tnameString = getArguments().getString("Tname", "");
+        tznameString = getArguments().getString("Tzname", "");
         totalABoolean = getArguments().getBoolean("Total", true);
 
         Log.d("2janV1", "Amount รับ " + amountString);
         Log.d("2janV1", "Tid รับ " + tidString);
         Log.d("2janV1", "Tname รับ " + tnameString);
+        Log.d("2janV1", "Tzname รับ " + tznameString);
         Log.d("2janV1", "Total รับ " + totalABoolean);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("OrderFood", Context.MODE_PRIVATE);
@@ -81,6 +85,7 @@ public class ServiceFragment extends Fragment {
         editor.putString("Amount", amountString);
         editor.putString("Tid", tidString);
         editor.putString("Tname", tnameString);
+        editor.putString("Tzname", tznameString);
         editor.putBoolean("Total", totalABoolean);
         editor.commit();
 

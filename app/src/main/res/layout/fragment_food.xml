@@ -17,16 +17,16 @@
             android:id="@+id/layoutHead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#cfcfcf"
             android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:background="#cfcfcf"
+            android:paddingTop="5dp">
 
             <!--Status-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
 
                 <!--Desk-->
                 <TextView
@@ -68,7 +68,9 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="#efefef"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
 
                 <!--NameFood-->
                 <TextView
@@ -76,7 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:text="NameFood"
+                    android:text="รายการ"
                     android:textSize="@dimen/h2" />
 
                 <!--Amount-->
@@ -86,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="Amount"
+                    android:text="จำนวน"
                     android:textSize="@dimen/h2" />
 
                 <!--Price-->
@@ -96,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="Price"
+                    android:text="ราคา"
                     android:textSize="@dimen/h2" />
 
             </LinearLayout>
