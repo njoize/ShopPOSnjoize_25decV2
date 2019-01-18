@@ -42,7 +42,7 @@ public class BillDetailFragment extends Fragment {
     private int anInt = 0;
     private int total;
 
-    private ArrayList<String> nameStringArrayList, amountStringArrayList, priceStringArrayList;
+    private ArrayList<String> nameStringArrayList, numStringArrayList, priceStringArrayList;
 
 
     private String idBillString, timeString, cnumString, typeString, nameString, zoneString, deskString;
@@ -152,7 +152,8 @@ public class BillDetailFragment extends Fragment {
 
         nameStringArrayList = new ArrayList<>();
         ArrayList<String> detailStringArrayList = new ArrayList<>();
-        amountStringArrayList = new ArrayList<>();
+        numStringArrayList = new ArrayList<>();
+        ArrayList<String> amountStringArrayList = new ArrayList<>();
         ArrayList<String> billStringArrayList = new ArrayList<>();
         priceStringArrayList = new ArrayList<>();
 
@@ -169,6 +170,7 @@ public class BillDetailFragment extends Fragment {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 nameStringArrayList.add(jsonObject.getString("pname"));
                 detailStringArrayList.add(jsonObject.getString("des"));
+                numStringArrayList.add(jsonObject.getString("num"));
                 amountStringArrayList.add("ราคา " + jsonObject.getString("price") + " บาท จำนวน " + jsonObject.getString("num"));
                 billStringArrayList.add(jsonObject.getString("setpr"));
                 priceStringArrayList.add(jsonObject.getString("sumPrice"));
@@ -279,328 +281,143 @@ public class BillDetailFragment extends Fragment {
                                         Log.d("12decV1", "You Click Payment: " + printSring);
 
 
-                                        byte[] top = new byte[]{0x10, 0x04, 0x04}; // Space Front Bill
-                                        //byte[] bytes  = new byte[]{0x1B, 0x4A, 40}; // Space Front Bill n*0.125 mm
-                                        byte[] lineup = new byte[]{0x0A, 0x0D}; // Update Line
-                                        byte[] centered = new byte[]{0x1B, 0x61, 1}; // centered
-                                        byte[] left = new byte[]{0x1B, 0x61, 0}; // left
-                                        byte[] right = new byte[]{0x1B, 0x61, 2}; // right
-                                        byte[] tab = new byte[]{27, 101, 0, 9}; // tab
-                                        byte[] tab1 = new byte[]{27, 101, 48, 1}; // tab
-                                        byte[] tab2 = new byte[]{27, 101, 48, 2}; // tab
-                                        byte[] tab3 = new byte[]{27, 101, 48, 3}; // tab
-//                                byte[] tab0    = new byte[]{27,68, 9}; // tab
-                                        byte[] tab0 = new byte[]{9}; // tab
-                                        byte[] dfont = new byte[]{0x1B, 0x21, 0x00}; // default font
-                                        byte[] bold = new byte[3]; // Set the font (double height and width bold)
-                                        bold[0] = 0x1B;
-                                        bold[1] = 0x21;
-                                        bold[2] |= 0x04; // 08 04 bold
-                                        bold[2] |= 0x08; // 10 08 height
-                                        bold[2] |= 0x20; // 20 10
-                                        byte[] openCashDrawer = new byte[]{0x1B, 0x70, 0x00, 0x40, 0x50}; // Open Cash Drawer
-                                        byte[] cutterPaper = new byte[]{0x1D, 0x56, 0x42, 90}; // Cutter Paper command
+                                        wifiCommunication.sndByte(Command.openCashDrawer);
 
-
-                                        byte[] OVERLINE = new byte[]{0x1B, 0x2D, 0x01};
-                                        byte[] UNDERLINE = new byte[]{0x1B, 0x2D, 0x01};
-                                        byte[] ROW_SPACE = new byte[]{0x1B, 0x31, 0x06}; //
-                                        byte[] ROW_DEFAULT = new byte[]{0x1B, 0x32}; //
-                                        byte[] ROW = new byte[]{0x1B, 0x33, 0x00}; //
-                                        byte[] INIT = new byte[]{0x1B, 0x40};
-                                        byte[] CLEAN = new byte[]{0x18};
-                                        byte[] LF = new byte[]{0x0A};
-                                        byte[] CR = new byte[]{0x0D};
-                                        byte[] DLE_EOT_1 = new byte[]{0x10, 0x04, 0x01};
-                                        byte[] DLE_EOT_2 = new byte[]{0x10, 0x04, 0x02};
-                                        byte[] DLE_EOT_3 = new byte[]{0x10, 0x04, 0x03};
-                                        byte[] DLE_EOT_4 = new byte[]{0x10, 0x04, 0x04}; //top
-                                        byte[] DOUBLE_WIDTH = new byte[]{0x1B, 0x0E};
-                                        byte[] CANCEL_DOUBLE_WIDTH = new byte[]{0x1B, 0x14};
-                                        byte[] BOLD = new byte[]{0x1B, 0x45, 0x01};
-                                        byte[] CANCEL_BOLD = new byte[]{0x1B, 0x45, 0x00};
-                                        byte[] MOVE_POINT = new byte[]{0x1B, 0x4A, 0x00}; //ติดบรรทัดบน
-                                        byte[] FONT = new byte[]{0x1B, 0x4D, 0x00};
-                                        byte[] RINGHTMARGIN = new byte[]{0x1B, 0x51, 0x05};
-                                        byte[] TRANSVERSE = new byte[]{0x1B, 0x55, 0x03};
-                                        byte[] LONGITUDINAL = new byte[]{0x1B, 0x56, 0x01}; //แนวนอน
-                                        byte[] ALIGN_LEFT = new byte[]{0x1B, 0x61, 0x00}; //left
-                                        byte[] ALIGN_CENTER = new byte[]{0x1B, 0x61, 0x01}; //centered
-                                        byte[] ALIGN_RIGHT = new byte[]{0x1B, 0x61, 0x02}; //right
-                                        byte[] DIRECTION = new byte[]{0x1B, 0x63, 0x00}; //กลับไปจัดซ้าย
-                                        byte[] MOVE_LINE = new byte[]{0x1B, 0x64, 0x08}; //เว้น8บรรทัด
-                                        byte[] BLANK_LINE = new byte[]{0x1B, 0x66, 0x00, 0x02}; //
-                                        byte[] ROTATION = new byte[]{0x1B, 0x49, 0x00};
-
-                                        wifiCommunication.sndByte(openCashDrawer);
-
-//                                wifiCommunication.sndByte(top);
-                                        wifiCommunication.sndByte(bold);
-                                        wifiCommunication.sndByte(centered);
+//                                wifiCommunication.sndByte(Command.top);
+                                        wifiCommunication.sndByte(Command.dbold);
+                                        wifiCommunication.sndByte(Command.centered);
                                         wifiCommunication.sendMsg("Brainwake", "tis-620");
-                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(Command.lineup);
                                         wifiCommunication.sendMsg("Matichon Academy", "tis-620");
-                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(Command.lineup);
                                         wifiCommunication.sendMsg("02 003 4511", "tis-620");
-                                        wifiCommunication.sndByte(lineup);
-                                        wifiCommunication.sndByte(dfont);
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sndByte(Command.dfont);
                                         wifiCommunication.sendMsg("-------------------------", "tis-620");
-                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(Command.lineup);
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sendMsg("   REG  01", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightLongWord(nameString + "  "), "tis-620");
+                                        wifiCommunication.sndByte(Command.lineup);
+
+                                        wifiCommunication.sendMsg("   " + "24/12/2018", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightLongWord(timeString + "  "), "tis-620");
+                                        wifiCommunication.sndByte(Command.lineup);
+
+                                        wifiCommunication.sendMsg("  Table No. " + deskString + "  " + zoneString , "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(cnumString+"CT "), "tis-620");
+//                                wifiCommunication.sendMsg("CT", "tis-620");
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sndByte(Command.lineup);
 
 //                                Work Here
 
+                                        Log.d("12decV1", "numArray ==> " + numStringArrayList.toString());
                                         Log.d("12decV1", "nameArray ==> " + nameStringArrayList.toString());
-                                        Log.d("12decV1", "amountArray ==> " + amountStringArrayList.toString());
-                                        Log.d("12decV1", "prickArray ==> " + priceStringArrayList.toString());
+                                        Log.d("12decV1", "priceArray ==> " + priceStringArrayList.toString());
+
 
 
                                         for (int i = 0; i < nameStringArrayList.size(); i += 1) {
 
-                                            wifiCommunication.sndByte(left);
-                                            wifiCommunication.sendMsg(Integer.toString(i + 1) + " x ", "tis-620");
-                                            wifiCommunication.sndByte(tab);
+                                            wifiCommunication.sndByte(Command.left);
+//                                    wifiCommunication.sendMsg(Integer.toString(i + 1) + " x ", "tis-620");
+                                            wifiCommunication.sendMsg("   " + numStringArrayList.get(i) + " x ", "tis-620");
+                                            wifiCommunication.sndByte(Command.tab);
 
                                             wifiCommunication.sendMsg(shortFood(nameStringArrayList.get(i)), "tis-620");
-                                            wifiCommunication.sndByte(tab);
+                                            wifiCommunication.sndByte(Command.tab);
 
 //                                    wifiCommunication.sendMsg("80", "tis-620");
-                                            wifiCommunication.sndByte(tab);
+                                            wifiCommunication.sndByte(Command.tab);
 
 
                                             wifiCommunication.sendMsg(rightWord(priceStringArrayList.get(i)), "tis-620");
-                                            wifiCommunication.sndByte(lineup);
+                                            wifiCommunication.sndByte(Command.lineup);
 
 
                                         }
 
-                                        wifiCommunication.sndByte(lineup);
-                                        wifiCommunication.sndByte(right);
-                                        wifiCommunication.sendMsg(shortTotal(), "tis-620");
-                                        wifiCommunication.sndByte(lineup);
-                                        wifiCommunication.sndByte(lineup);
-                                        wifiCommunication.sndByte(centered);
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sendMsg("   SUB TOTAL", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sendMsg("   Discount", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sendMsg("   Vat 7%", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sendMsg("   Service Charge 10%", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sndByte(Command.bold);
+                                        wifiCommunication.sendMsg("   ", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.bold);
+                                        wifiCommunication.sendMsg("TOTAL", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.dbold);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sndByte(Command.dfont);
+                                        wifiCommunication.sendMsg("   CASH", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sendMsg("   Change", "tis-620");
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sndByte(Command.tab);
+                                        wifiCommunication.sendMsg(rightWord(Integer.toString(total)), "tis-620");
+
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sndByte(Command.lineup);
+                                        wifiCommunication.sndByte(Command.dbold);
+                                        wifiCommunication.sndByte(Command.centered);
                                         wifiCommunication.sendMsg("THANK YOU", "tis-620");
-                                        wifiCommunication.sndByte(lineup);
+                                        wifiCommunication.sndByte(Command.lineup);
 
-                                        wifiCommunication.sndByte(cutterPaper);
-
-
-//                                wifiCommunication.sndByte(left);
-//                                wifiCommunication.sendMsg("Tab", "tis-620");
-//                                wifiCommunication.sndByte(tab1);
-//                                wifiCommunication.sndByte(tab0);
-//                                wifiCommunication.sendMsg("1", "tis-620");
-//                                wifiCommunication.sndByte(tab2);
-//                                wifiCommunication.sndByte(tab0);
-//                                wifiCommunication.sendMsg("2", "tis-620");
-//                                wifiCommunication.sndByte(tab3);
-//                                wifiCommunication.sndByte(tab0);
-//                                wifiCommunication.sendMsg("3", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(DIRECTION);
-//                                wifiCommunication.sendMsg("DIRECTION", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(cutterPaper);
-
-//                                wifiCommunication.sndByte(RINGHTMARGIN);
-////                                wifiCommunication.sendMsg("RINGHTMARGIN", "tis-620");
-//                                wifiCommunication.sndByte(DIRECTION);
-//                                wifiCommunication.sendMsg("DIRECTION", "tis-620");
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sendMsg("222", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(MOVE_LINE2);
-//                                wifiCommunication.sendMsg("MOVE_LINE2", "tis-620");
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sendMsg("222", "tis-620");
-//                                wifiCommunication.sndByte(LF);
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sendMsg("333", "tis-620");
-//                                wifiCommunication.sndByte(ALIGN_RIGHT);
-//                                wifiCommunication.sendMsg("ALIGN_RIGHT", "tis-620");
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sendMsg("ALIGN_RIGHT", "tis-620");
-//                                wifiCommunication.sndByte(DIRECTION);
-//                                wifiCommunication.sendMsg("DIRECTION", "tis-620");
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sendMsg("1", "tis-620");
-
-
-//                                byte[] INIT = new byte[] { 0x1B, 0x40 };
-//                                wifiCommunication.sndByte(INIT);
-//                                wifiCommunication.sendMsg("INIT", "tis-620");
-//
-//                                byte[] CLEAN = new byte[] { 0x18 };
-//                                wifiCommunication.sndByte(CLEAN);
-//                                wifiCommunication.sendMsg("CLEAN", "tis-620");
-
-
-//                                byte[] OVERLINE = new byte[] { 0x1B,0x2D,0x01 };
-//                                wifiCommunication.sndByte(OVERLINE);
-//                                wifiCommunication.sendMsg("OVERLINE", "tis-620");
-//
-//                                byte[] UNDERLINE = new byte[] { 0x1B,0x2D,0x01 };
-//                                wifiCommunication.sndByte(UNDERLINE);
-//                                wifiCommunication.sendMsg("UNDERLINE", "tis-620");
-//
-//                                byte[] ROW_SPACE = new byte[] { 0x1B, 0x31, 0x06 };
-//                                wifiCommunication.sndByte(ROW_SPACE);
-//                                wifiCommunication.sendMsg("ROW_SPACE", "tis-620");
-//
-//                                byte[] ROW_DEFAULT = new byte[] { 0x1B, 0x32 };
-//                                wifiCommunication.sndByte(ROW_DEFAULT);
-//                                wifiCommunication.sendMsg("ROW_DEFAULT", "tis-620");
-//
-//                                byte[] ROW = new byte[] { 0x1B, 0x33,0x00 };
-//                                wifiCommunication.sndByte(ROW);
-//                                wifiCommunication.sendMsg("ROW", "tis-620");
-//
-//                                byte[] LF = new byte[] { 0x0A };
-//                                wifiCommunication.sndByte(LF);
-//                                wifiCommunication.sendMsg("LF", "tis-620");
-//
-//                                byte[] CR = new byte[] { 0x0D };
-//                                wifiCommunication.sndByte(CR);
-//                                wifiCommunication.sendMsg("CR", "tis-620");
-//
-//                                byte[] DLE_EOT_1 = new byte[] { 0x10,0x04,0x01 };
-//                                wifiCommunication.sndByte(DLE_EOT_1);
-//                                wifiCommunication.sendMsg("DLE_EOT_1", "tis-620");
-//
-//                                byte[] DLE_EOT_2 = new byte[] { 0x10,0x04,0x02 };
-//                                wifiCommunication.sndByte(DLE_EOT_2);
-//                                wifiCommunication.sendMsg("DLE_EOT_2", "tis-620");
-//
-//                                byte[] DLE_EOT_3 = new byte[] { 0x10,0x04,0x03 };
-//                                wifiCommunication.sndByte(DLE_EOT_3);
-//                                wifiCommunication.sendMsg("DLE_EOT_3", "tis-620");
-//
-//                                byte[] DLE_EOT_4 = new byte[] { 0x10,0x04,0x04 };
-//                                wifiCommunication.sndByte(DLE_EOT_4);
-//                                wifiCommunication.sendMsg("DLE_EOT_4", "tis-620");
-//
-//                                byte[] DOUBLE_WIDTH = new byte[] { 0x1B,0x0E };
-//                                wifiCommunication.sndByte(DOUBLE_WIDTH);
-//                                wifiCommunication.sendMsg("DOUBLE_WIDTH", "tis-620");
-//
-//                                byte[] CANCEL_DOUBLE_WIDTH = new byte[] { 0x1B,0x14 };
-//                                wifiCommunication.sndByte(CANCEL_DOUBLE_WIDTH);
-//                                wifiCommunication.sendMsg("CANCEL_DOUBLE_WIDTH", "tis-620");
-//
-//                                byte[] BOLD = new byte[] { 0x1B,0x45,0x01 };
-//                                wifiCommunication.sndByte(BOLD);
-//                                wifiCommunication.sendMsg("BOLD", "tis-620");
-//
-//                                byte[] CANCEL_BOLD = new byte[] { 0x1B,0x45,0x00 };
-//                                wifiCommunication.sndByte(CANCEL_BOLD);
-//                                wifiCommunication.sendMsg("CANCEL_BOLD", "tis-620");
-//
-//                                byte[] MOVE_POINT = new byte[] { 0x1B,0x4A,0x00 };
-//                                wifiCommunication.sndByte(MOVE_POINT);
-//                                wifiCommunication.sendMsg("MOVE_POINT", "tis-620");
-//
-//                                byte[] FONT = new byte[] { 0x1B,0x4D,0x00 };
-//                                wifiCommunication.sndByte(FONT);
-//                                wifiCommunication.sendMsg("FONT", "tis-620");
-//
-//                                byte[] RINGHTMARGIN = new byte[] { 0x1B,0x51,0x05 };
-//                                wifiCommunication.sndByte(RINGHTMARGIN);
-//                                wifiCommunication.sendMsg("RINGHTMARGIN", "tis-620");
-//
-//                                byte[] TRANSVERSE = new byte[] { 0x1B,0x55,0x03 };
-//                                wifiCommunication.sndByte(TRANSVERSE);
-//                                wifiCommunication.sendMsg("TRANSVERSE", "tis-620");
-//
-//                                byte[] LONGITUDINAL = new byte[] { 0x1B,0x56,0x01 };
-//                                wifiCommunication.sndByte(LONGITUDINAL);
-//                                wifiCommunication.sendMsg("LONGITUDINAL", "tis-620");
-//
-//                                byte[] ALIGN_LEFT = new byte[] { 0x1B,0x61,0x00 };
-//                                wifiCommunication.sndByte(ALIGN_LEFT);
-//                                wifiCommunication.sendMsg("ALIGN_LEFT", "tis-620");
-//
-//                                byte[] ALIGN_CENTER = new byte[] { 0x1B,0x61,0x01 };
-//                                wifiCommunication.sndByte(ALIGN_CENTER);
-//                                wifiCommunication.sendMsg("ALIGN_CENTER", "tis-620");
-//
-//                                byte[] ALIGN_RIGHT = new byte[] { 0x1B,0x61,0x00 };
-//                                wifiCommunication.sndByte(ALIGN_RIGHT);
-//                                wifiCommunication.sendMsg("ALIGN_RIGHT", "tis-620");
-//
-//                                byte[] DIRECTION = new byte[] { 0x1B,0x63,0x00 };
-//                                wifiCommunication.sndByte(DIRECTION);
-//                                wifiCommunication.sendMsg("DIRECTION", "tis-620");
-//
-//                                byte[] MOVE_LINE = new byte[] { 0x1B,0x64,0x08 };
-//                                wifiCommunication.sndByte(MOVE_LINE);
-//                                wifiCommunication.sendMsg("MOVE_LINE", "tis-620");
-//
-//                                byte[] BLANK_LINE = new byte[] { 0x1B,0x66,0x00,0x02 };
-//                                wifiCommunication.sndByte(BLANK_LINE);
-//                                wifiCommunication.sendMsg("BLANK_LINE", "tis-620");
-//
-//                                byte[] LEFTMARGIN = new byte[] { 0x1B,0x61,0x01 };
-//                                wifiCommunication.sndByte(LEFTMARGIN);
-//                                wifiCommunication.sendMsg("LEFTMARGIN", "tis-620");
-//
-//                                byte[] ROTATION = new byte[] { 0x1B,0x49,0x00 };
-//                                wifiCommunication.sndByte(ROTATION);
-//                                wifiCommunication.sendMsg("ROTATION", "tis-620");
-
-
-//
-////                                wifiCommunication.sndByte(top);
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(bold);
-//                                wifiCommunication.sndByte(centered);
-//                                wifiCommunication.sendMsg("Brainwake", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//
-//                                wifiCommunication.sendMsg("Matichon Academy", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//
-//                                wifiCommunication.sendMsg("02 005 0026", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(lineup);
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(left);
-//                                wifiCommunication.sendMsg("left 1", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(right);
-//                                wifiCommunication.sendMsg("right 1", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(left);
-//                                wifiCommunication.sendMsg("left 2", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(right);
-//                                wifiCommunication.sendMsg("right 2", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(bold);
-//                                wifiCommunication.sndByte(right);
-//                                wifiCommunication.sendMsg("SUM 123", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//                                wifiCommunication.sndByte(lineup);
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(bold);
-//                                wifiCommunication.sndByte(centered);
-//                                wifiCommunication.sendMsg("THANK YOU", "tis-620");
-//                                wifiCommunication.sndByte(lineup);
-//
-//                                wifiCommunication.sndByte(dfont);
-//                                wifiCommunication.sndByte(left);
-//
+                                        wifiCommunication.sndByte(Command.cutterPaper);
 
 
                                         wifiCommunication.close();
@@ -721,6 +538,23 @@ public class BillDetailFragment extends Fragment {
 
     }
 
+    private String rightLongWord(String rightLongString) {
+
+        int currentWord = rightLongString.length();
+        String result = "";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < (15 - currentWord); i += 1) {
+            stringBuilder.append(" ");
+        }
+
+        result = stringBuilder.toString() + rightLongString;
+
+        return result;
+
+    }
+
+
     private String shortTotal() {
 
         String s = "รวมทั้งสิ้น ";
@@ -730,9 +564,9 @@ public class BillDetailFragment extends Fragment {
         return result;
     }
 
-    private String rightWord(String totalPriceString) {
+    private String rightWord(String rightString) {
 
-        int currentWord = totalPriceString.length();
+        int currentWord = rightString.length();
         String result = "";
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -740,7 +574,7 @@ public class BillDetailFragment extends Fragment {
             stringBuilder.append(" ");
         }
 
-        result = stringBuilder.toString() + totalPriceString;
+        result = stringBuilder.toString() + rightString;
 
         return result;
     }
@@ -749,8 +583,19 @@ public class BillDetailFragment extends Fragment {
 
         String result = foodString;
 
-        if (result.length() <= 20) {
-            result = result.substring(0, 17) + "...";
+        if (result.length() >= 23) {
+            result = result.substring(0, 20) + "...";
+        } else {
+
+            int currentWord = result.length();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < (23 - currentWord); i += 1) {
+                stringBuilder.append(" ");
+            }
+
+
+            result = result + stringBuilder.toString();
+
         }
 
         return result;

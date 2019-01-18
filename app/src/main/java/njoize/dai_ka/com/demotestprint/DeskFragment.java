@@ -70,16 +70,16 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
         drawDesk();
 
 //        Test Show
-//        TextView textView = getView().findViewById(R.id.txtTest);
-//        String stringTest = "Test1" + "\n" + "Test2" + "\n" + "123";
-//        textView.setText(stringTest);
+/*        TextView textView = getView().findViewById(R.id.txtTest);
+        String stringTest = "Test1" + "\n" + "Test2" + "\n" + "123";
+        textView.setText(stringTest);*/
 
 
 //        buildDesk(textViews[6][1],3, "3 CT", "12:00", "5");
 
     } // Main Method
 
-    private void buildDesk(TextView textView, int deskFactorStart, int deskFactorEnd, String cnum, String time, String desk , int status) {
+    private void buildDesk(TextView textView, int deskFactorStart, int deskFactorEnd, String cnum, String time, String desk , int tstatus) {
         // the following change is what fixed it
 //        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
 
@@ -92,9 +92,9 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 //        int factor = 12 * deskFactor;
 //        int factor2 = 2;
 
-        if (status == 0) {
+        if (tstatus == 0) {
             textView.setBackgroundColor(Color.LTGRAY);
-        } else if (status == 1) {
+        } else if (tstatus == 1) {
             textView.setBackgroundColor(Color.MAGENTA);
         } else {
             textView.setBackgroundColor(Color.RED);

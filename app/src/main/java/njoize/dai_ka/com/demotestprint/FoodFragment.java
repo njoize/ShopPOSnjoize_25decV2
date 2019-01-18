@@ -44,13 +44,15 @@ public class FoodFragment extends Fragment {
     public static FoodFragment foodInstante(String amountCustomer,
                                             boolean totalBill,
                                             String tidString,
-                                            String tnameString) {
+                                            String tnameString,
+                                            String tznameString) {
 
         FoodFragment foodFragment = new FoodFragment();
         Bundle bundle = new Bundle();
         bundle.putString("Amount", amountCustomer);
         bundle.putString("Tid", tidString);
         bundle.putString("Tname", tnameString);
+        bundle.putString("Tzname", tznameString);
         bundle.putBoolean("Bill", totalBill);
         foodFragment.setArguments(bundle);
         return foodFragment;

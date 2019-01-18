@@ -2,61 +2,25 @@ package njoize.dai_ka.com.demotestprint;
 
 public class Command {
 
+    public static final byte[] top = new byte[]{0x10, 0x04, 0x04}; // Space Front Bill
+    public static final byte[] lineup = new byte[]{0x0A, 0x0D}; // Update Line
+    public static final byte[] centered = new byte[]{0x1B, 0x61, 1}; // centered
+    public static final byte[] left = new byte[]{0x1B, 0x61, 0}; // left
+    public static final byte[] right = new byte[]{0x1B, 0x61, 2}; // right
+    public static final byte[] tab = new byte[]{27, 101, 0, 9}; // tab
+    public static final byte[] dfont = new byte[]{0x1B, 0x21, 0x00 }; // default font
+    public static final byte[] bold = new byte[]{0x1B, 0x45, 0x01}; // bold
+    public static final byte[] dbold = new byte[]{0x1B, 0x21, 0x04 | 0x08 | 0x20}; // Set the font (double height and width bold)
 
-    public static final byte[] OVERLINE = new byte[] { 0x1B,0x2D,0x01 };
+//    byte[] dbold = new byte[3]; // Set the font (double height and width bold)
+//    dbold[0] = 0x1B;
+//    dbold[1] = 0x21;
+//    dbold[2] |= 0x04; // 08 04 bold
+//    dbold[2] |= 0x08; // 10 08 height
+//    dbold[2] |= 0x20; // 20 10
 
-    public static final byte[] UNDERLINE = new byte[] { 0x1B,0x2D,0x01 };
+    public static final byte[] openCashDrawer = new byte[]{0x1B, 0x70, 0x00, 0x40, 0x50}; // Open Cash Drawer
+    public static final byte[] cutterPaper = new byte[]{0x1D, 0x56, 0x42, 90}; // Cutter Paper command
 
-    public static final byte[] ROW_SPACE = new byte[] { 0x1B, 0x31, 0x06 };
-
-    public static final byte[] ROW_DEFAULT = new byte[] { 0x1B, 0x32 };
-
-    public static final byte[] ROW = new byte[] { 0x1B, 0x33,0x00 };
-
-    public static final byte[] INIT = new byte[] { 0x1B, 0x40 };
-
-    public static final byte[] CLEAN = new byte[] { 0x18 };
-
-    public static final byte[] LF = new byte[] { 0x0A };
-
-    public static final byte[] CR = new byte[] { 0x0D };
-
-    public static final byte[] DLE_EOT_1 = new byte[] { 0x10,0x04,0x01 };
-
-    public static final byte[] DLE_EOT_2 = new byte[] { 0x10,0x04,0x02 };
-
-    public static final byte[] DLE_EOT_3 = new byte[] { 0x10,0x04,0x03 };
-
-    public static final byte[] DLE_EOT_4 = new byte[] { 0x10,0x04,0x04 };
-
-    public static final byte[] DOUBLE_WIDTH = new byte[] { 0x1B,0x0E };
-    public static final byte[] CANCEL_DOUBLE_WIDTH = new byte[] { 0x1B,0x14 };
-
-    public static final byte[] BOLD = new byte[] { 0x1B,0x45,0x01 };
-    public static final byte[] CANCEL_BOLD = new byte[] { 0x1B,0x45,0x00 };
-
-    public static final byte[] MOVE_POINT = new byte[] { 0x1B,0x4A,0x00 };
-
-    public static final byte[] FONT = new byte[] { 0x1B,0x4D,0x00 };
-
-    public static final byte[] RINGHTMARGIN = new byte[] { 0x1B,0x51,0x05 };
-
-    public static final byte[] TRANSVERSE = new byte[] { 0x1B,0x55,0x03 };
-
-    public static final byte[] LONGITUDINAL = new byte[] { 0x1B,0x56,0x01 };
-
-    public static final byte[] ALIGN_LEFT = new byte[] { 0x1B,0x61,0x00 };
-    public static final byte[] ALIGN_CENTER = new byte[] { 0x1B,0x61,0x01 };
-    public static final byte[] ALIGN_RIGHT = new byte[] { 0x1B,0x61,0x00 };
-
-    public static final byte[] DIRECTION = new byte[] { 0x1B,0x63,0x00 };
-
-    public static final byte[] MOVE_LINE = new byte[] { 0x1B,0x64,0x08 };
-
-    public static final byte[] BLANK_LINE = new byte[] { 0x1B,0x66,0x00,0x02 };
-
-    public static final byte[] LEFTMARGIN = new byte[] { 0x1B,0x61,0x01 };
-
-    public static final byte[] ROTATION = new byte[] { 0x1B,0x49,0x00 };
 
 }
