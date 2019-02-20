@@ -29,6 +29,7 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
     ArrayList<NameMemberModel> nameMemberModelArrayList = new ArrayList<NameMemberModel>();
     private SearchView searchView;
     private MemberListViewAdapter memberListViewAdapter;
+    private ArrayList<String> idStringArrayList;
 
 
     public MemberFragment() {
@@ -41,6 +42,7 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
 
         myConstant = new MyConstant();
         nameMemberStringArrayList = new ArrayList<>();
+        idStringArrayList = new ArrayList<>();
 
 //        Create RecyclerView
         createRecyclerView();
@@ -58,7 +60,8 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
             JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i += 1) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                nameMemberStringArrayList.add(jsonObject.getString("sname"));
+                nameMemberStringArrayList.add(jsonObject.getString("sname") + " " + jsonObject.getString("tel"));
+                idStringArrayList.add(jsonObject.getString("id"));
             }
             Log.d("20FebV1", "nameMember ==> " + nameMemberStringArrayList.toString());
 
