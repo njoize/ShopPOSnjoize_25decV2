@@ -32,7 +32,8 @@
         <activity android:name=".ServiceActivity" />
         <activity android:name=".DetailActivity" />
         <activity android:name=".FoodActivity" />
-        <activity android:name=".TestPrintActivity"></activity>
+        <activity android:name=".TestPrintActivity" />
+        <activity android:name=".MemberActivity"></activity>
     </application>
 
 </manifest>

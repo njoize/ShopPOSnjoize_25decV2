@@ -60,7 +60,7 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
             JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i += 1) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                nameMemberStringArrayList.add(jsonObject.getString("sname") + " " + jsonObject.getString("tel"));
+                nameMemberStringArrayList.add(jsonObject.getString("name") + " " + jsonObject.getString("sname") + " " + jsonObject.getString("tel"));
                 idStringArrayList.add(jsonObject.getString("id"));
             }
             Log.d("20FebV1", "nameMember ==> " + nameMemberStringArrayList.toString());
@@ -68,7 +68,7 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
             for (int i = 0; i < nameMemberStringArrayList.size(); i += 1) {
-                NameMemberModel nameMemberModel = new NameMemberModel(nameMemberStringArrayList.get(i));
+                NameMemberModel nameMemberModel = new NameMemberModel(idStringArrayList.get(i), nameMemberStringArrayList.get(i));
                 nameMemberModelArrayList.add(nameMemberModel);
             }
 
