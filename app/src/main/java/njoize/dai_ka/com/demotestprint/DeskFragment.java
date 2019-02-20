@@ -4,6 +4,7 @@ package njoize.dai_ka.com.demotestprint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
     private ArrayList<String> idNameStringArrayList = new ArrayList<>();
     private ArrayList<String> tnameStringArrayList = new ArrayList<>();
     private ArrayList<String> tznameStringArrayList = new ArrayList<>();
+
+    private ArrayList<Integer> tstatusIntegerArrayList = new ArrayList<>();
 
     private int position;
 
@@ -139,6 +142,7 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
                 String tzname = jsonObject.getString("tzname");
                 Integer tstatus = jsonObject.getInt("tstatus");
 
+                tstatusIntegerArrayList.add(tstatus);
 
                 tidStringArrayList.add(jsonObject.getString("tid"));
                 tnameStringArrayList.add(tname);
@@ -265,63 +269,92 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 
         Log.d("24decV1", "tid Click ==> " + tidStringArrayList.get(position));
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        if (tstatusIntegerArrayList.get(position) == 0) {
+//            Show Status
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-        alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setCancelable(false);
 
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        final View view = layoutInflater.inflate(R.layout.layout_alert, null);
-        alertDialogBuilder.setView(view);
+            LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+            final View view = layoutInflater.inflate(R.layout.layout_alert, null);
+            alertDialogBuilder.setView(view);
 
-        alertDialogBuilder.setTitle("For Desk " + tnameStringArrayList.get(position))
-                .setMessage("Please Fill All Blank")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+            alertDialogBuilder.setTitle("For Desk " + tnameStringArrayList.get(position))
+                    .setMessage("Please Fill All Blank")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
 
-                        EditText editText = view.findViewById(R.id.edtAmountCustomer);
-                        String amountCustomerString = editText.getText().toString().trim();
-                        if (amountCustomerString.isEmpty()) {
-                            Toast.makeText(getActivity(), "Please Fill Amount Customer", Toast.LENGTH_SHORT).show();
-                        } else {
-                            boolean totalBill = true;
-                            RadioButton radioButton = view.findViewById(R.id.radBill);
-                            if (radioButton.isChecked()) {
-                                totalBill = true;
+                            EditText editText = view.findViewById(R.id.edtAmountCustomer);
+                            String amountCustomerString = editText.getText().toString().trim();
+                            if (amountCustomerString.isEmpty()) {
+                                Toast.makeText(getActivity(), "Please Fill Amount Customer", Toast.LENGTH_SHORT).show();
                             } else {
-                                totalBill = false;
+                                boolean totalBill = true;
+                                RadioButton radioButton = view.findViewById(R.id.radBill);
+                                if (radioButton.isChecked()) {
+                                    totalBill = true;
+                                } else {
+                                    totalBill = false;
+                                }
+
+                                String tidString = tidStringArrayList.get(position);
+                                String tnameString = tnameStringArrayList.get(position);
+                                String tznameString = tznameStringArrayList.get(position);
+
+
+                                Log.d("2janV1", "Amunt ส่ง==> " + amountCustomerString);
+                                Log.d("2janV1", "totalBill ส่ง==> " + totalBill);
+                                Log.d("2janV1", "tidString ส่ง==> " + tidString);
+                                Log.d("2janV1", "tnameString ส่ง==> " + tnameString);
+                                Log.d("2janV1", "tznameString ส่ง==> " + tznameString);
+
+                                getActivity().getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .replace(R.id.contentServiceFragment, ServiceFragment.serviceInstant(2,
+                                                amountCustomerString,
+                                                totalBill,
+                                                tidString,
+                                                tnameString,
+                                                tznameString))
+                                        .commit();
+
+
                             }
 
-                            String tidString = tidStringArrayList.get(position);
-                            String tnameString = tnameStringArrayList.get(position);
-                            String tznameString = tznameStringArrayList.get(position);
-
-
-                            Log.d("2janV1", "Amunt ส่ง==> " + amountCustomerString);
-                            Log.d("2janV1", "totalBill ส่ง==> " + totalBill);
-                            Log.d("2janV1", "tidString ส่ง==> " + tidString);
-                            Log.d("2janV1", "tnameString ส่ง==> " + tnameString);
-                            Log.d("2janV1", "tznameString ส่ง==> " + tznameString);
-
-                            getActivity().getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.contentServiceFragment, ServiceFragment.serviceInstant(2,
-                                            amountCustomerString,
-                                            totalBill,
-                                            tidString,
-                                            tnameString,
-                                            tznameString))
-                                    .commit();
-
-
+                            dialog.dismiss();
                         }
+                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
 
-                        dialog.dismiss();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+
+        } else {
+//            To Do
+            MyConstant myConstant = new MyConstant();
+            String[] strings = myConstant.getDetailStrings();
+
+            try {
+
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+
+//                Test
+                for (int i = 0; i < strings.length; i += 1) {
+                    intent.putExtra(strings[i], "0");
+                }
+                intent.putExtra("tid", tidStringArrayList.get(position));
+                startActivity(intent);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }).show();
+
+
+        } // if
+
+
+
 
 
     }   // onClick
