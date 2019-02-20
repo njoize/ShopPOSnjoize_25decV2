@@ -3,6 +3,8 @@ package njoize.dai_ka.com.demotestprint;
 public class MyConstant {
 
     //    Explicit
+    private String urlGetAllMember = "http://www.brainwakecafe.com/android/getAllMember.php";
+
     private String urlPaymentOrder = "http://www.brainwakecafe.com/android/editOrder.php";
 
     private String urlAddOrder = "http://www.brainwakecafe.com/android/addOrder.php";
@@ -61,6 +63,10 @@ public class MyConstant {
 
 //    Getter
 
+
+    public String getUrlGetAllMember() {
+        return urlGetAllMember;
+    }
 
     public String getUrlPaymentOrder() {
         return urlPaymentOrder;
