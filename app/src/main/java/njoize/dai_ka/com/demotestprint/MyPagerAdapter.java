@@ -29,8 +29,10 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
                 FoodFragment foodFragment = FoodFragment.foodInstante("", true,"","", "");
                 return foodFragment;
             case 3:
-                NotificationFragment notificationFragment = new NotificationFragment();
-                return notificationFragment;
+                MemberFragment memberFragment = new MemberFragment();
+                return memberFragment;
+//                NotificationFragment notificationFragment = new NotificationFragment();
+//                return notificationFragment;
             default:
                 return null;
         }

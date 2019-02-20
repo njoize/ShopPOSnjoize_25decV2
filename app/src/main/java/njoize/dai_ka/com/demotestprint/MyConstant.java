@@ -25,7 +25,8 @@ public class MyConstant {
 
     private String nameShopString = "Name Shop";
 
-    private String[] titleTabStrings = new String[]{"Bill", "Desk", "Food", "Noti"};
+    private String[] titleTabStrings = new String[]{"Bill", "Desk", "Food", "Member"};
+//    private String[] titleTabStrings = new String[]{"Bill", "Desk", "Food", "Noti"};
 
     private String[] billTitleStrings = new String[]{"ยังไม่ชำระ", "สำเร็จ", "ยกเลิก"};
 
