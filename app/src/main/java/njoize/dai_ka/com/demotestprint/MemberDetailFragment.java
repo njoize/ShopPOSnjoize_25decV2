@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 public class MemberDetailFragment extends Fragment {
 
     private String idString;
+    private MyConstant myConstant = new MyConstant();
 
     public MemberDetailFragment() {
         // Required empty public constructor
@@ -33,11 +34,33 @@ public class MemberDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        idString = getArguments().getString("id");
-        Log.d("20FebV2", "id receive at Detail ==> " + idString);
+//        Get MID
+        getMID();
+
+//        Create Detail
+        createDetail();
 
 
     } // Main Method
+
+    private void createDetail() {
+        try {
+
+            GetMemberWhereID getMemberWhereID = new GetMemberWhereID(getActivity());
+            getMemberWhereID.execute(idString, myConstant.getUrlGetMemberWhereID());
+            String jsonString = getMemberWhereID.get();
+            Log.d("20FebV2", jsonString);
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+            Log.d("20FebV2", "e at createDetail ==> " + e.toString());
+        }
+    }
+
+    private void getMID() {
+        idString = getArguments().getString("id");
+        Log.d("20FebV2", "id receive at Detail ==> " + idString);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
