@@ -2,10 +2,12 @@ package njoize.dai_ka.com.demotestprint;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class DetailActivity extends AppCompatActivity {
 
     private boolean statusABoolean; // true ==> From MemberDetail, false ==> DetailActivity
+    private String mid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,8 @@ public class DetailActivity extends AppCompatActivity {
 
         String tidString = getIntent().getStringExtra("tid");
         statusABoolean = getIntent().getBooleanExtra("Status", false);
+        mid = getIntent().getStringExtra("mid");
+        Log.d("28FebV1", "mid DetailActivity ==> " + mid);
 
         for (int i = 0; i < strings.length; i += 1) {
             valueStrings1[i] = getIntent().getStringExtra(strings[i]);
@@ -39,7 +43,8 @@ public class DetailActivity extends AppCompatActivity {
                             valueStrings1[5],
                             valueStrings1[6],
                             tidString,
-                            statusABoolean)).commit();
+                            statusABoolean,
+                            mid)).commit();
         }
 
 

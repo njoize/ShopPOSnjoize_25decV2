@@ -84,6 +84,8 @@ public class MemberListViewAdapter extends BaseAdapter {
 
                     Intent intent = new Intent(parent.getContext(), DetailActivity.class);
                     intent.putExtra("Status", true);
+                    intent.putExtra("mid", idString);
+                    Log.d("28FebV1", "mid adapter ==> " + idString);
 
                     SharedPreferences sharedPreferences = ((ShowMemberListActivity) parent.getContext())
                             .getSharedPreferences("BillDetail", Context.MODE_PRIVATE);
@@ -96,7 +98,7 @@ public class MemberListViewAdapter extends BaseAdapter {
                     intent.putExtra("Zone", sharedPreferences.getString("Zone", ""));
                     intent.putExtra("Desk", sharedPreferences.getString("Desk", ""));
                     intent.putExtra("tid", sharedPreferences.getString("tid", ""));
-                    intent.putExtra("mid", sharedPreferences.getString("mid", ""));
+
 
 
                     parent.getContext().startActivity(intent);

@@ -49,7 +49,7 @@ public class BillDetailFragment extends Fragment {
 
 
     private String idBillString, timeString, cnumString, typeString, nameString, zoneString, deskString;
-    private String tidString;
+    private String tidString, mid;
     private String tag = "2decV2";
     private MyConstant myConstant = new MyConstant();
 
@@ -66,7 +66,8 @@ public class BillDetailFragment extends Fragment {
                                                         String zoneString,
                                                         String deskString,
                                                         String tidString,
-                                                        boolean status) {
+                                                        boolean status,
+                                                        String mid) {
 
         BillDetailFragment billDetailFragment = new BillDetailFragment();
         Bundle bundle = new Bundle();
@@ -79,6 +80,7 @@ public class BillDetailFragment extends Fragment {
         bundle.putString("Desk", deskString);
         bundle.putString("tid", tidString);
         bundle.putBoolean("Status", status);
+        bundle.putString("mid",mid);
         billDetailFragment.setArguments(bundle);
         return billDetailFragment;
     }
@@ -118,6 +120,7 @@ public class BillDetailFragment extends Fragment {
         if (status) {
             TextView textView = getView().findViewById(R.id.txtMember);
             textView.setText("Member OK");
+            Log.d("28FebV1","mid ==> " + mid);
         }
 
 
@@ -254,6 +257,7 @@ public class BillDetailFragment extends Fragment {
         zoneString = getArguments().getString("Zone");
         deskString = getArguments().getString("Desk");
         tidString = getArguments().getString("tid");
+        mid = getArguments().getString("mid");
         Log.d(tag, "idBill ==> " + idBillString);
 
         SharedPreferences sharedPreferences = getActivity()
@@ -267,7 +271,7 @@ public class BillDetailFragment extends Fragment {
         editor.putString("Zone", zoneString);
         editor.putString("Desk", deskString);
         editor.putString("tid", tidString);
-        editor.putString("mid", ""); // เตรียม Database เพิ่ม
+        editor.putString("mid", mid); // เตรียม Database เพิ่ม
         editor.commit();
     }
 
