@@ -21,13 +21,17 @@ public class MemberListViewAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private ArrayList<NameMemberModel> nameMemberModelArrayList;
     private List<NameMemberModel> nameMemberModelList;
+    private Boolean statusABoolean;
 
-    public MemberListViewAdapter(Context context, List<NameMemberModel> nameMemberModelList) {
+    public MemberListViewAdapter(Context context,
+                                 List<NameMemberModel> nameMemberModelList,
+                                 boolean statusABoolean) {
         this.context = context;
         this.nameMemberModelList = nameMemberModelList;
         this.layoutInflater = LayoutInflater.from(context);
         this.nameMemberModelArrayList = new ArrayList<NameMemberModel>();
         this.nameMemberModelArrayList.addAll(nameMemberModelList);
+        this.statusABoolean = statusABoolean;
     }
 
     @Override
@@ -59,16 +63,26 @@ public class MemberListViewAdapter extends BaseAdapter {
         }
         final String idString = nameMemberModelList.get(position).getIdString();
         holder.name.setText(nameMemberModelList.get(position).getNameMemberString());
-        holder.name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("20FebV2", "You Click Text id ==> " + idString);
-                Intent intent = new Intent(parent.getContext(), MemberActivity.class);
-                intent.putExtra("id", idString);
-                intent.putExtra("Status", true);
-                parent.getContext().startActivity(intent);
-            }
-        });
+
+        if (!statusABoolean) {
+
+            holder.name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("28FebV1", "You Click Text id ==> " + idString);
+
+//                    ((DetailActivity) parent.getContext()).getSupportFragmentManager().popBackStack();
+                    ((DetailActivity)parent.getContext()).getSupportFragmentManager().popBackStack();
+
+
+
+
+                }
+            });
+
+        }
+
+
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override

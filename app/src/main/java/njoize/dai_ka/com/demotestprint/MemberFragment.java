@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -30,15 +31,28 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
     private SearchView searchView;
     private MemberListViewAdapter memberListViewAdapter;
     private ArrayList<String> idStringArrayList;
+    private boolean statusFrom = true;
 
 
     public MemberFragment() {
         // Required empty public constructor
     }
 
+//    status ==> true (from Packer), ==> false (Select Button)
+    public static MemberFragment memberInstance(boolean status) {
+        MemberFragment memberFragment = new MemberFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("Status", status);
+        memberFragment.setArguments(bundle);
+        return memberFragment;
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        statusFrom = getArguments().getBoolean("Status", true);
+        Log.d("28FebV1", "Receive Status ==> " + statusFrom);
 
         myConstant = new MyConstant();
         nameMemberStringArrayList = new ArrayList<>();
@@ -73,9 +87,17 @@ public class MemberFragment extends Fragment implements SearchView.OnQueryTextLi
             }
 
             ListView listView = getView().findViewById(R.id.listViewMember);
-            memberListViewAdapter = new MemberListViewAdapter(getActivity(), nameMemberModelArrayList);
+            memberListViewAdapter = new MemberListViewAdapter(getActivity(), nameMemberModelArrayList, statusFrom);
 
             listView.setAdapter(memberListViewAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d("28FebV1", "click ListView");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            });
 
             searchView = getView().findViewById(R.id.searchViewMember);
             searchView.setOnQueryTextListener(this);

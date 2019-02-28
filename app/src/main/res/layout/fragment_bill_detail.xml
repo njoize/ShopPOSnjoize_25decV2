@@ -8,17 +8,17 @@
     <!--Toolbar-->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarDetail"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <!--Top-->
     <RelativeLayout
-        android:layout_below="@+id/toolbarDetail"
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbarDetail">
 
         <TextView
             android:id="@+id/txtLeft"
@@ -30,9 +30,9 @@
 
         <TextView
             android:id="@+id/txtRight"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:text="Title Right"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/txtTotal"
-        android:layout_below="@+id/layoutTop"/>
+        android:layout_below="@+id/layoutTop" />
 
 
     <!--Base-->
@@ -54,43 +54,64 @@
         android:id="@+id/txtTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/linearBotton"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/buttonBottom"
         android:text="Total = 1234"
         android:textSize="@dimen/h1"
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/buttonBottom"
+        android:id="@+id/linearBotton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnEdit"
-            android:text="สั่งเพิ่ม/แก้ไข"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <!--Button Top-->
+        <LinearLayout
+            android:id="@+id/buttonBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnSep"
-            android:text="แยกบิล"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="สั่งเพิ่ม/แก้ไข" />
 
-        <Button
-            android:id="@+id/btnPaymentAgain"
-            android:text="Print Again"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/btnSep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="แยกบิล" />
+
+            <Button
+                android:id="@+id/btnPaymentAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Print Again" />
+
+            <Button
+                android:id="@+id/btnSelectMember"
+                android:text="Select Member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <!--Button Botton-->
+
+
 
         <Button
             android:id="@+id/btnPayment"
-            android:text="กำลังเชื่อมต่อปริ้นเตอร์"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="กำลังเชื่อมต่อปริ้นเตอร์" />
 
     </LinearLayout>
+
 
 
 

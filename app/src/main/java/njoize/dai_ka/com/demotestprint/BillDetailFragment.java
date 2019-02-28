@@ -3,6 +3,7 @@ package njoize.dai_ka.com.demotestprint;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -95,7 +96,6 @@ public class BillDetailFragment extends Fragment {
 //        Print Controller
         printController();
 
-
 //        Get OID
         getOID();
 
@@ -105,8 +105,42 @@ public class BillDetailFragment extends Fragment {
 //        Show Text
         showText();
 
+//        SelectMember Controller
+        selectMemberController();
+
 
     } // Main Method
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == getActivity().RESULT_OK) {
+            Log.d("28FebV1", "Result OK");
+        }
+
+
+    }
+
+    private void selectMemberController() {
+        Button button = getView().findViewById(R.id.btnSelectMember);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), ShowMemberListActivity.class);
+//                startActivityForResult(intent, 1);
+
+                getActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.contentDetailFragment, MemberFragment.memberInstance(false))
+                        .addToBackStack(null)
+                        .commit();
+
+
+            }
+        });
+    }
 
     private void createToolbar() {
         Toolbar toolbar = getView().findViewById(R.id.toolbarDetail);
