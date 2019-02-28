@@ -144,8 +144,8 @@ public class BillFragment extends Fragment {
 
                 bgColorStringArrayList.add(Integer.toString(tabPosition));
 
-                // อย่าลืมแก้เป็น tid ดึง database
-                tidStringArrayList.add(jsonObject.getString("tname"));
+                // อย่าลืมแก้เป็น tid ดึง database << ดึงแล้ว
+                tidStringArrayList.add(jsonObject.getString("tid"));
 
             } // for
 

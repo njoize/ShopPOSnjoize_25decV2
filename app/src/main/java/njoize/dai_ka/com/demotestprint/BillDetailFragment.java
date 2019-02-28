@@ -504,7 +504,7 @@ public class BillDetailFragment extends Fragment {
                     String oid = idBillString;
                     String tid = tidString;
                     String user = nameString;
-                    String payment = statusCash;
+                    String payment = statusCash; // ส่งไปเป็น 0,1 ต้องไปปรับ Database
 
                     PaybackThread paybackThread = new PaybackThread(getActivity());
                     paybackThread.execute(oid, tid, user, payment, myConstant.getUrlPaymentOrder());
