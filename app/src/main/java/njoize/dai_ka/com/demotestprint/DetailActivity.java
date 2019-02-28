@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 public class DetailActivity extends AppCompatActivity {
 
+    private boolean statusABoolean; // true ==> From MemberDetail, false ==> DetailActivity
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,11 +17,14 @@ public class DetailActivity extends AppCompatActivity {
         String[] strings = myConstant.getDetailStrings();
         String[] valueStrings1 = new String[strings.length];
 
+        String tidString = getIntent().getStringExtra("tid");
+        statusABoolean = getIntent().getBooleanExtra("Status", false);
+
         for (int i = 0; i < strings.length; i += 1) {
             valueStrings1[i] = getIntent().getStringExtra(strings[i]);
         }
 
-        String tidString = getIntent().getStringExtra("tid");
+
 
 
         if (savedInstanceState == null) {
@@ -32,7 +37,9 @@ public class DetailActivity extends AppCompatActivity {
                             valueStrings1[3],
                             valueStrings1[4],
                             valueStrings1[5],
-                            valueStrings1[6],tidString)).commit();
+                            valueStrings1[6],
+                            tidString,
+                            statusABoolean)).commit();
         }
 
 

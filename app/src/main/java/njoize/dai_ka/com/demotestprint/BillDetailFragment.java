@@ -2,8 +2,10 @@ package njoize.dai_ka.com.demotestprint;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -62,7 +64,9 @@ public class BillDetailFragment extends Fragment {
                                                         String typeString,
                                                         String nameString,
                                                         String zoneString,
-                                                        String deskString, String tidString) {
+                                                        String deskString,
+                                                        String tidString,
+                                                        boolean status) {
 
         BillDetailFragment billDetailFragment = new BillDetailFragment();
         Bundle bundle = new Bundle();
@@ -73,7 +77,8 @@ public class BillDetailFragment extends Fragment {
         bundle.putString("name", nameString);
         bundle.putString("Zone", zoneString);
         bundle.putString("Desk", deskString);
-        bundle.putString("tid",tidString);
+        bundle.putString("tid", tidString);
+        bundle.putBoolean("Status", status);
         billDetailFragment.setArguments(bundle);
         return billDetailFragment;
     }
@@ -108,6 +113,13 @@ public class BillDetailFragment extends Fragment {
 //        SelectMember Controller
         selectMemberController();
 
+//        Show Status
+        boolean status = getArguments().getBoolean("Status");
+        if (status) {
+            TextView textView = getView().findViewById(R.id.txtMember);
+            textView.setText("Member OK");
+        }
+
 
     } // Main Method
 
@@ -127,15 +139,16 @@ public class BillDetailFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getActivity(), ShowMemberListActivity.class);
-//                startActivityForResult(intent, 1);
+                Intent intent = new Intent(getActivity(), ShowMemberListActivity.class);
+                startActivity(intent);
+                getActivity().finish();
 
-                getActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.contentDetailFragment, MemberFragment.memberInstance(false))
-                        .addToBackStack(null)
-                        .commit();
+//                getActivity()
+//                        .getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .replace(R.id.contentDetailFragment, MemberFragment.memberInstance(false))
+//                        .addToBackStack(null)
+//                        .commit();
 
 
             }
@@ -242,6 +255,20 @@ public class BillDetailFragment extends Fragment {
         deskString = getArguments().getString("Desk");
         tidString = getArguments().getString("tid");
         Log.d(tag, "idBill ==> " + idBillString);
+
+        SharedPreferences sharedPreferences = getActivity()
+                .getSharedPreferences("BillDetail", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("idBill", idBillString);
+        editor.putString("Time", timeString);
+        editor.putString("cnum", cnumString);
+        editor.putString("type", typeString);
+        editor.putString("name", nameString);
+        editor.putString("Zone", zoneString);
+        editor.putString("Desk", deskString);
+        editor.putString("tid", tidString);
+        editor.putString("mid", ""); // เตรียม Database เพิ่ม
+        editor.commit();
     }
 
 
@@ -345,11 +372,11 @@ public class BillDetailFragment extends Fragment {
                                         wifiCommunication.sendMsg(rightLongWord(timeString + "  "), "tis-620");
                                         wifiCommunication.sndByte(Command.lineup);
 
-                                        wifiCommunication.sendMsg("  Table No. " + deskString + "  " + zoneString , "tis-620");
+                                        wifiCommunication.sendMsg("  Table No. " + deskString + "  " + zoneString, "tis-620");
                                         wifiCommunication.sndByte(Command.tab);
                                         wifiCommunication.sndByte(Command.tab);
                                         wifiCommunication.sndByte(Command.tab);
-                                        wifiCommunication.sendMsg(rightWord(cnumString+"CT "), "tis-620");
+                                        wifiCommunication.sendMsg(rightWord(cnumString + "CT "), "tis-620");
 //                                wifiCommunication.sendMsg("CT", "tis-620");
                                         wifiCommunication.sndByte(Command.lineup);
                                         wifiCommunication.sndByte(Command.lineup);
@@ -359,7 +386,6 @@ public class BillDetailFragment extends Fragment {
                                         Log.d("12decV1", "numArray ==> " + numStringArrayList.toString());
                                         Log.d("12decV1", "nameArray ==> " + nameStringArrayList.toString());
                                         Log.d("12decV1", "priceArray ==> " + priceStringArrayList.toString());
-
 
 
                                         for (int i = 0; i < nameStringArrayList.size(); i += 1) {
@@ -459,7 +485,6 @@ public class BillDetailFragment extends Fragment {
                                         communicationABoolean = false;
 
 
-
                                     } else {
 
                                         //Log.d("24novV3", "Communication Disible");
@@ -556,7 +581,6 @@ public class BillDetailFragment extends Fragment {
 
             }
         }).show();
-
 
 
     }

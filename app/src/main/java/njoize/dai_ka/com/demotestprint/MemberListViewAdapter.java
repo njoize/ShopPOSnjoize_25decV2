@@ -2,6 +2,7 @@ package njoize.dai_ka.com.demotestprint;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,17 +72,41 @@ public class MemberListViewAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Log.d("28FebV1", "You Click Text id ==> " + idString);
 
+
 //                    ((DetailActivity) parent.getContext()).getSupportFragmentManager().popBackStack();
-                    ((DetailActivity)parent.getContext()).getSupportFragmentManager().popBackStack();
+//                    ((DetailActivity)parent.getContext()).getSupportFragmentManager().popBackStack();
+//                    ((DetailActivity) parent.getContext()).getSupportFragmentManager()
+//                            .beginTransaction().add(R.id.contentDetailFragment, BillDetailFragment.billDetailInstance("",
+//                            "",
+//                            "",
+//                            "", "", "", "", "", true))
+//                            .commit();
+
+                    Intent intent = new Intent(parent.getContext(), DetailActivity.class);
+                    intent.putExtra("Status", true);
+
+                    SharedPreferences sharedPreferences = ((ShowMemberListActivity) parent.getContext())
+                            .getSharedPreferences("BillDetail", Context.MODE_PRIVATE);
+
+                    intent.putExtra("idBill", sharedPreferences.getString("idBill", ""));
+                    intent.putExtra("Time", sharedPreferences.getString("Time", ""));
+                    intent.putExtra("cnum", sharedPreferences.getString("cnum", ""));
+                    intent.putExtra("type", sharedPreferences.getString("type", ""));
+                    intent.putExtra("name", sharedPreferences.getString("name", ""));
+                    intent.putExtra("Zone", sharedPreferences.getString("Zone", ""));
+                    intent.putExtra("Desk", sharedPreferences.getString("Desk", ""));
+                    intent.putExtra("tid", sharedPreferences.getString("tid", ""));
+                    intent.putExtra("mid", sharedPreferences.getString("mid", ""));
 
 
+                    parent.getContext().startActivity(intent);
+                    ((ShowMemberListActivity) parent.getContext()).finish();
 
 
                 }
             });
 
         }
-
 
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +142,6 @@ public class MemberListViewAdapter extends BaseAdapter {
         } // if
         notifyDataSetChanged();
     } // filter
-
 
 
 }

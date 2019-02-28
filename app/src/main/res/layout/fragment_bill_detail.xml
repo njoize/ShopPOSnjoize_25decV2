@@ -49,6 +49,15 @@
         android:layout_below="@+id/layoutTop" />
 
 
+    <TextView
+        android:id="@+id/txtMember"
+        android:textSize="@dimen/h2"
+        android:layout_above="@+id/txtTotal"
+        android:layout_alignParentRight="true"
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <!--Base-->
     <TextView
         android:id="@+id/txtTotal"
