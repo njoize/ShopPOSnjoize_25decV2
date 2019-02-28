@@ -22,6 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ShowMemberListActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +34,7 @@
         <activity android:name=".DetailActivity" />
         <activity android:name=".FoodActivity" />
         <activity android:name=".TestPrintActivity" />
-        <activity android:name=".MemberActivity"></activity>
+        <activity android:name=".MemberActivity" />
     </application>
 
 </manifest>

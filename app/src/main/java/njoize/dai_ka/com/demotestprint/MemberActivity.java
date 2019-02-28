@@ -1,5 +1,6 @@
 package njoize.dai_ka.com.demotestprint;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,15 @@ public class MemberActivity extends AppCompatActivity {
         Log.d("20FebV2", "Status ==> " + statusABoolean);
 
         if (statusABoolean) {
+
+            Log.d("28FebV1", "You Click Text on MemberActivity");
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .add(R.id.contentMemberFragment, MemberSelectFragment.memberSelectInstant(idString))
+//                    .commit();
+
+
+
 
         } else {
 

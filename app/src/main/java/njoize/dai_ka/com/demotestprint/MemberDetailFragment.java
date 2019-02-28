@@ -53,7 +53,7 @@ public class MemberDetailFragment extends Fragment {
             GetMemberWhereID getMemberWhereID = new GetMemberWhereID(getActivity());
             getMemberWhereID.execute(idString, myConstant.getUrlGetMemberWhereID());
             String jsonString = getMemberWhereID.get();
-            Log.d("20FebV2", jsonString);
+            Log.d("20FebV2", "json ==> " + jsonString);
 
             JSONArray jsonArray = new JSONArray(jsonString);
             for (int i = 0; i < jsonArray.length(); i += 1) {
