@@ -63,6 +63,15 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content" />
 
+        <EditText
+            android:inputType="number"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/edtDiscount"
+            android:hint="Discount"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 

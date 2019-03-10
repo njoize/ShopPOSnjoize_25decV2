@@ -4,6 +4,7 @@ package njoize.dai_ka.com.demotestprint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -132,7 +133,7 @@ public class FoodFragment extends Fragment {
 
                         Log.d(tag, "user" + user);
                         Log.d(tag, "numcus" + numcus);
-                        Log.d(tag, "billtype" + billtype);
+                        Log.d(tag, "billtype" + tid);
                         Log.d(tag, "tid" + tid);
 
                         SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.database_name, Context.MODE_PRIVATE, null);
@@ -156,6 +157,39 @@ public class FoodFragment extends Fragment {
                                 orderThread.execute(user, numcus, billtype, tid, pid, price, amount, myConstant.getUrlAddOrder());
 
                                 emptySQLite();
+
+
+                                GetUserWhereName getUserWhereName = new GetUserWhereName(getActivity());
+
+                                getUserWhereName.execute(user, myConstant.getUrlGetOrderWhereUser());
+                                String resultJSoN = getUserWhereName.get();
+                                Log.d("10marV1", "resultJSoN ==> " + resultJSoN);
+
+                                JSONArray jsonArray = new JSONArray(resultJSoN);
+                                JSONObject jsonObject = jsonArray.getJSONObject(0);
+//
+//
+                                Intent intent = new Intent(getActivity(), DetailActivity.class); // go to DetailActivity
+//                                intent.putExtra("Login", resultJSoN);
+////                                intent.putExtra("Status", true);
+////                                intent.putExtra("mid", idString);
+////                                Log.d("28FebV1", "mid adapter ==> " + idString);
+//
+//
+                                intent.putExtra("idBill", jsonObject.getString("id"));
+                                intent.putExtra("Time", jsonObject.getString("date"));
+                                intent.putExtra("cnum", jsonObject.getString("cnum"));
+                                intent.putExtra("type", jsonObject.getString("type"));
+                                intent.putExtra("name", jsonObject.getString("name"));
+                                intent.putExtra("Zone", jsonObject.getString("tzname"));
+                                intent.putExtra("Desk", jsonObject.getString("tname"));
+                                intent.putExtra("tid", jsonObject.getString("tid"));
+
+
+
+                                startActivity(intent);
+                                getActivity().finish();
+
 
                             } catch (Exception e) {
                                 Log.d(tag, "e upload ==> " + e.toString());

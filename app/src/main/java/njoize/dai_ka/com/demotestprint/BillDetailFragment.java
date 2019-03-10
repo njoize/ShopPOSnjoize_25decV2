@@ -49,7 +49,9 @@ public class BillDetailFragment extends Fragment {
 
 
     private String idBillString, timeString, cnumString, typeString, nameString, zoneString, deskString;
-    private String tidString, mid;
+    private String tidString;
+    private String midString = "0";
+    private String discountString = "0";
     private String tag = "2decV2";
     private MyConstant myConstant = new MyConstant();
 
@@ -67,7 +69,7 @@ public class BillDetailFragment extends Fragment {
                                                         String deskString,
                                                         String tidString,
                                                         boolean status,
-                                                        String mid) {
+                                                        String midString) {
 
         BillDetailFragment billDetailFragment = new BillDetailFragment();
         Bundle bundle = new Bundle();
@@ -80,7 +82,7 @@ public class BillDetailFragment extends Fragment {
         bundle.putString("Desk", deskString);
         bundle.putString("tid", tidString);
         bundle.putBoolean("Status", status);
-        bundle.putString("mid",mid);
+        bundle.putString("mid",midString);
         billDetailFragment.setArguments(bundle);
         return billDetailFragment;
     }
@@ -115,12 +117,14 @@ public class BillDetailFragment extends Fragment {
 //        SelectMember Controller
         selectMemberController();
 
+
+
 //        Show Status
         boolean status = getArguments().getBoolean("Status");
         if (status) {
             TextView textView = getView().findViewById(R.id.txtMember);
-            textView.setText("Member OK");
-            Log.d("28FebV1","mid ==> " + mid);
+            textView.setText("mid ==> " + midString);
+            Log.d("28FebV1","mid ==> " + midString);
         }
 
 
@@ -182,6 +186,7 @@ public class BillDetailFragment extends Fragment {
                 communicationABoolean = true;
             }
         });
+
     }
 
     private void showText() {
@@ -257,7 +262,7 @@ public class BillDetailFragment extends Fragment {
         zoneString = getArguments().getString("Zone");
         deskString = getArguments().getString("Desk");
         tidString = getArguments().getString("tid");
-        mid = getArguments().getString("mid");
+        midString = getArguments().getString("mid");
         Log.d(tag, "idBill ==> " + idBillString);
 
         SharedPreferences sharedPreferences = getActivity()
@@ -271,7 +276,7 @@ public class BillDetailFragment extends Fragment {
         editor.putString("Zone", zoneString);
         editor.putString("Desk", deskString);
         editor.putString("tid", tidString);
-        editor.putString("mid", mid); // เตรียม Database เพิ่ม
+        editor.putString("mid", midString); // เตรียม Database เพิ่ม
         editor.commit();
     }
 
@@ -332,8 +337,12 @@ public class BillDetailFragment extends Fragment {
                                     EditText couponEditText = view.findViewById(R.id.edtCoupon);
                                     String moneyCouponString = couponEditText.getText().toString().trim();
 
+
+                                    EditText discountEditText = view.findViewById(R.id.edtDiscount);
+                                    String discountString = discountEditText.getText().toString().trim();
+
                                     uploadToServer(cashCheckBox.isChecked(), creditCheckBox.isChecked(), couponCheckBox.isChecked(),
-                                            moneyCashString, moneyCreditString, moneyCouponString);
+                                            moneyCashString, moneyCreditString, moneyCouponString, discountString);
 
 
                                     if (communicationABoolean) {
@@ -521,7 +530,8 @@ public class BillDetailFragment extends Fragment {
                                 boolean couponBool,
                                 String moneyCashString,
                                 String moneyCreditString,
-                                String moneyCouponString) {
+                                String moneyCouponString,
+                                final String discountString) {
 
         String tag = "3janV1";
         final String statusCash = changeBoolToString(cashBool);
@@ -534,6 +544,7 @@ public class BillDetailFragment extends Fragment {
         Log.d(tag, "Credit = " + moneyCreditString);
         Log.d(tag, "statusCoupon " + statusCoupon);
         Log.d(tag, "Coupon = " + moneyCouponString);
+        Log.d(tag, "Discount = " + discountString);
 
         Log.d(tag, "SumTotal ==> " + total);
 
@@ -564,13 +575,22 @@ public class BillDetailFragment extends Fragment {
                 try {
 
 //                    Upload Data to Server
+                    String discount = discountString;
+
+                    String mid;
+                    if (midString != null && !midString.isEmpty() && !midString.equals("null")) {
+                        mid = midString;
+                    } else {
+                        mid = "0";
+                    }
+
                     String oid = idBillString;
                     String tid = tidString;
                     String user = nameString;
                     String payment = statusCash; // ส่งไปเป็น 0,1 ต้องไปปรับ Database
 
                     PaybackThread paybackThread = new PaybackThread(getActivity());
-                    paybackThread.execute(oid, tid, user, payment, myConstant.getUrlPaymentOrder());
+                    paybackThread.execute(oid, tid, user, payment, mid, discount, myConstant.getUrlPaymentOrder());
 
                     String result = paybackThread.get();
 

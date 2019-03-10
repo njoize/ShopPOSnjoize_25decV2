@@ -1,6 +1,9 @@
 package njoize.dai_ka.com.demotestprint;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -44,8 +48,40 @@ public class MemberDetailFragment extends Fragment {
 //        Create Detail
         createDetail();
 
+//        SelectMember Controller
+        selectMemberController();
 
     } // Main Method
+
+    private void selectMemberController() {
+        Button button = getView().findViewById(R.id.btnMember);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+
+                intent.putExtra("Status", true);
+                intent.putExtra("mid", idString);
+                Log.d("28FebV1", "mid adapter ==> " + idString);
+
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("BillDetail", Context.MODE_PRIVATE);
+
+                intent.putExtra("idBill", sharedPreferences.getString("idBill", ""));
+                intent.putExtra("Time", sharedPreferences.getString("Time", ""));
+                intent.putExtra("cnum", sharedPreferences.getString("cnum", ""));
+                intent.putExtra("type", sharedPreferences.getString("type", ""));
+                intent.putExtra("name", sharedPreferences.getString("name", ""));
+                intent.putExtra("Zone", sharedPreferences.getString("Zone", ""));
+                intent.putExtra("Desk", sharedPreferences.getString("Desk", ""));
+                intent.putExtra("tid", sharedPreferences.getString("tid", ""));
+
+                startActivity(intent);
+                getActivity().finish();
+
+            }
+        });
+    }
 
     private void createDetail() {
         try {

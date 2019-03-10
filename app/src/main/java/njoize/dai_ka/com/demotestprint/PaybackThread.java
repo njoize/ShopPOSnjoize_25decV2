@@ -29,9 +29,11 @@ public class PaybackThread extends AsyncTask<String, Void, String> {
                     .add("tid", strings[1])
                     .add("user", strings[2])
                     .add("payment", strings[3])
+                    .add("mid", strings[4])
+                    .add("discount", strings[5])
                     .build();
             Request.Builder builder = new Request.Builder();
-            Request request = builder.url(strings[4]).post(requestBody).build();
+            Request request = builder.url(strings[6]).post(requestBody).build();
             Response response = okHttpClient.newCall(request).execute();
             return response.body().string();
 
