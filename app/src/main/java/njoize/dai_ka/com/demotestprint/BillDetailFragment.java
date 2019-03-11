@@ -42,6 +42,7 @@ public class BillDetailFragment extends Fragment {
     private boolean aBoolean = false;
     private boolean communicationABoolean = true; // true ==> Can Print, false ==> Disable Print
     private Button button, printAgainButton;
+    private boolean buttonBoolean = true; // true ==> กำลังเชือมต่อPrinter
     private int anInt = 0;
     private int total;
 
@@ -82,7 +83,7 @@ public class BillDetailFragment extends Fragment {
         bundle.putString("Desk", deskString);
         bundle.putString("tid", tidString);
         bundle.putBoolean("Status", status);
-        bundle.putString("mid",midString);
+        bundle.putString("mid", midString);
         billDetailFragment.setArguments(bundle);
         return billDetailFragment;
     }
@@ -118,13 +119,12 @@ public class BillDetailFragment extends Fragment {
         selectMemberController();
 
 
-
 //        Show Status
         boolean status = getArguments().getBoolean("Status");
         if (status) {
             TextView textView = getView().findViewById(R.id.txtMember);
             textView.setText("mid ==> " + midString);
-            Log.d("28FebV1","mid ==> " + midString);
+            Log.d("28FebV1", "mid ==> " + midString);
         }
 
 
@@ -178,6 +178,62 @@ public class BillDetailFragment extends Fragment {
 
     private void printController() {
         button = getView().findViewById(R.id.btnPayment);
+
+        if (buttonBoolean) {
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("11MarV1", "You Click กำลังเชื่อมต่อปรินเตอร์");
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                    alertDialogBuilder.setTitle("Choose Payment");
+
+                    LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+                    final View view = layoutInflater.inflate(R.layout.alertdialog_payment, null);
+                    alertDialogBuilder.setView(view);
+
+                    alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            CheckBox cashCheckBox = view.findViewById(R.id.chbCash);
+                            CheckBox creditCheckBox = view.findViewById(R.id.chbCredit);
+                            CheckBox couponCheckBox = view.findViewById(R.id.chbCoupon);
+
+                            EditText cashEditText = view.findViewById(R.id.edtMoneyCash);
+                            String moneyCashString = cashEditText.getText().toString().trim();
+
+                            EditText creditEditText = view.findViewById(R.id.edtCredit);
+                            String moneyCreditString = creditEditText.getText().toString().trim();
+
+                            EditText couponEditText = view.findViewById(R.id.edtCoupon);
+                            String moneyCouponString = couponEditText.getText().toString().trim();
+
+
+                            EditText discountEditText = view.findViewById(R.id.edtDiscount);
+                            String discountString = discountEditText.getText().toString().trim();
+
+
+                            uploadToServer(cashCheckBox.isChecked(), creditCheckBox.isChecked(), couponCheckBox.isChecked(),
+                                    moneyCashString, moneyCreditString, moneyCouponString, discountString);
+
+
+                        }
+                    });
+                    alertDialogBuilder.show();
+                }
+            });
+
+        }   // if
+
+
         printAgainButton = getView().findViewById(R.id.btnPaymentAgain);
         printAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,6 +353,9 @@ public class BillDetailFragment extends Fragment {
             switch (msg.what) {
 
                 case WifiCommunication.WFPRINTER_CONNECTED:
+
+                    buttonBoolean = false;
+
                     Log.d(tag, "Success Connected Printer");
                     button.setText("ชำระเงิน");
 
@@ -304,9 +363,7 @@ public class BillDetailFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
 
-//
-
-
+//                            ShowAlert Payment
                             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
                             alertDialogBuilder.setTitle("Choose Payment");
 

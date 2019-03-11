@@ -49,6 +49,17 @@ public class BillFragment extends Fragment {
 
     } // Method Main
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Log.d("11MarV1", "onResume BillFragment Work");
+
+        createRecyclerView(tabAnInt);
+
+
+    }
+
     private void createTabLayout() {
         TabLayout tabLayout = getView().findViewById(R.id.tabLayoutBill);
         String[] strings = myConstant.getBillTitleStrings();

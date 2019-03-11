@@ -82,6 +82,13 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 
     } // Main Method
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d("11MarV1", "setUserVisibleHind on DeskFragment");
+        drawDesk();
+    }
+
     private void buildDesk(TextView textView, int deskFactorStart, int deskFactorEnd, String cnum, String time, String desk , int tstatus) {
         // the following change is what fixed it
 //        TableRow.LayoutParams paramsExample = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -334,6 +341,7 @@ public class DeskFragment extends Fragment implements View.OnClickListener {
 //            To Do
             MyConstant myConstant = new MyConstant();
             String[] strings = myConstant.getDetailStrings();
+//            strings ==> {"idBill", "Time", "cnum", "type", "name", "Zone", "Desk"}
 
             try {
 
